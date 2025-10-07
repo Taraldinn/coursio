@@ -1,17 +1,15 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Home,
   PlaySquare,
   PlusCircle,
   Settings,
-  ChevronLeft,
+  BookOpen,
 } from "lucide-react"
 
 const navigation = [
@@ -22,56 +20,34 @@ const navigation = [
 ]
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col border-r bg-card transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
-      )}
-    >
-      <div className="flex h-16 items-center justify-between border-b px-4">
-        {!collapsed && (
-          <Link href="/dashboard" className="text-xl font-bold">
-            Coursio
-          </Link>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto"
-        >
-          <ChevronLeft
-            className={cn(
-              "h-4 w-4 transition-transform",
-              collapsed && "rotate-180"
-            )}
-          />
-        </Button>
+    <aside className="flex w-64 flex-col border-r bg-sidebar">
+      <div className="border-b p-4">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <BookOpen className="h-6 w-6" />
+          <h2 className="text-lg font-semibold">Coursio</h2>
+        </Link>
       </div>
-
-      <ScrollArea className="flex-1 px-3 py-4">
-        <nav className="space-y-1">
+      <ScrollArea className="flex-1">
+        <nav className="space-y-1 p-2">
           {navigation.map((item) => {
             const isActive = pathname === item.href
             return (
-              <Button
+              <Link
                 key={item.name}
-                variant={isActive ? "secondary" : "ghost"}
-                asChild
+                href={item.href}
                 className={cn(
-                  "w-full justify-start",
-                  collapsed && "justify-center px-2"
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 )}
               >
-                <Link href={item.href}>
-                  <item.icon className="h-4 w-4" />
-                  {!collapsed && <span className="ml-3">{item.name}</span>}
-                </Link>
-              </Button>
+                <item.icon className="h-4 w-4" />
+                <span>{item.name}</span>
+              </Link>
             )
           })}
         </nav>

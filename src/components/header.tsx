@@ -14,6 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut, Settings, User, Search, Bell } from "lucide-react"
 import Link from "next/link"
+import { ThemeToggle } from "./theme-toggle"
 
 export function Header() {
   const { data: session } = useSession()
@@ -31,6 +32,7 @@ export function Header() {
         </div>
       </form>
       <span className="text-sm font-medium">{session?.user?.name || "User"}</span>
+      <ThemeToggle />
       <Button variant="ghost" size="icon" className="relative">
         <Bell className="h-4 w-4" />
         <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary" />

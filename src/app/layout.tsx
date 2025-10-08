@@ -20,12 +20,16 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
     title: 'Coursio - Track Your Learning Journey',
-    description: 'Transform YouTube playlists into structured courses. Track your progress, take notes, and never lose your place. All for free.'
+    description: 'Transform YouTube playlists into structured courses. Track your progress, take notes, and never lose your place. All for free.',
+    generator: 'v0.app'
 };
+
+const CLERK_PUBLISHABLE_KEY =
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "pk_test_ZXhvdGljLXN3aWZ0LTk2LmNsZXJrLmFjY291bnRzLmRldiQ"
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
-        <ClerkProvider>
+        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
             <html suppressHydrationWarning lang='en'>
                 <body
                     className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground overscroll-none antialiased`}>

@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -20,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useSidebar } from "@/contexts/sidebar-context"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -29,7 +29,7 @@ const navigation = [
 ]
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false)
+  const { collapsed, setCollapsed } = useSidebar()
   const pathname = usePathname()
 
   return (

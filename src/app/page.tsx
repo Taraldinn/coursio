@@ -1,29 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { 
-  PlayCircle, 
-  BookOpen, 
-  LineChart, 
-  Youtube, 
-  Edit3, 
-  TrendingUp,
-  Users,
-  Sparkles,
-  ArrowRight,
-  Check,
-  Github,
-  Zap
-} from "lucide-react"
+import { PlayCircle, Youtube, Edit3, TrendingUp, Users, Sparkles, ArrowRight, Check, Github, Zap } from "lucide-react"
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  visible: { opacity: 1, y: 0 },
 }
 
 const staggerContainer = {
@@ -31,9 +18,9 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 }
 
 const features = [
@@ -41,38 +28,38 @@ const features = [
     icon: Youtube,
     title: "YouTube Integration",
     description: "Import entire playlists automatically with full video metadata and thumbnails",
-    gradient: "from-red-500 to-pink-500"
+    gradient: "from-red-500 to-pink-500",
   },
   {
     icon: Edit3,
     title: "Smart Note Taking",
     description: "Write Markdown notes per video with auto-save. Never lose your thoughts",
-    gradient: "from-blue-500 to-cyan-500"
+    gradient: "from-blue-500 to-cyan-500",
   },
   {
     icon: TrendingUp,
     title: "Progress Tracking",
     description: "Automatic progress saving every 10 seconds. Pick up exactly where you left off",
-    gradient: "from-purple-500 to-pink-500"
+    gradient: "from-purple-500 to-pink-500",
   },
   {
     icon: Users,
     title: "Multi-Auth Support",
     description: "Sign in with GitHub OAuth or traditional email/password authentication",
-    gradient: "from-green-500 to-emerald-500"
+    gradient: "from-green-500 to-emerald-500",
   },
   {
     icon: Sparkles,
     title: "Beautiful UI",
     description: "Modern interface built with shadcn/ui components and Tailwind CSS v4",
-    gradient: "from-orange-500 to-yellow-500"
+    gradient: "from-orange-500 to-yellow-500",
   },
   {
     icon: Zap,
     title: "Lightning Fast",
     description: "Built on Next.js 15 with App Router and Turbopack for instant page loads",
-    gradient: "from-violet-500 to-purple-500"
-  }
+    gradient: "from-violet-500 to-purple-500",
+  },
 ]
 
 const benefits = [
@@ -81,14 +68,14 @@ const benefits = [
   "Track completion percentage",
   "Dark mode support",
   "Mobile responsive design",
-  "Free and open source"
+  "Free and open source",
 ]
 
 export default function HomePage() {
   const heroRef = useRef(null)
   const featuresRef = useRef(null)
   const ctaRef = useRef(null)
-  
+
   const heroInView = useInView(heroRef, { once: true })
   const featuresInView = useInView(featuresRef, { once: true })
   const ctaInView = useInView(ctaRef, { once: true })
@@ -121,8 +108,8 @@ export default function HomePage() {
       <section ref={heroRef} className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24">
         {/* Background Gradient */}
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45%_40%_at_50%_40%,hsl(var(--primary)/0.1),transparent)]" />
-        
-        <motion.div 
+
+        <motion.div
           className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           initial="hidden"
           animate={heroInView ? "visible" : "hidden"}
@@ -136,7 +123,7 @@ export default function HomePage() {
               </Badge>
             </motion.div>
 
-            <motion.h1 
+            <motion.h1
               variants={fadeInUp}
               className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
             >
@@ -146,25 +133,19 @@ export default function HomePage() {
               </span>
             </motion.h1>
 
-            <motion.p 
-              variants={fadeInUp}
-              className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg"
-            >
-              Transform YouTube playlists into structured courses. Track your progress, 
-              take notes, and never lose your place. All for free.
+            <motion.p variants={fadeInUp} className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
+              Transform YouTube playlists into structured courses. Track your progress, take notes, and never lose your
+              place. All for free.
             </motion.p>
 
-            <motion.div 
-              variants={fadeInUp}
-              className="mt-8 flex flex-wrap justify-center gap-4"
-            >
+            <motion.div variants={fadeInUp} className="mt-8 flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild className="gap-2">
                 <Link href="/sign-up">
                   Start Learning Free
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="gap-2">
+              <Button size="lg" variant="outline" asChild className="gap-2 bg-transparent">
                 <Link href="https://github.com/siddharthamaity/nextjs-15-starter-shadcn" target="_blank">
                   <Github className="h-5 w-5" />
                   View Source
@@ -172,7 +153,7 @@ export default function HomePage() {
               </Button>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={fadeInUp}
               className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-muted-foreground sm:gap-6"
             >
@@ -195,7 +176,7 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section ref={featuresRef} className="py-12 sm:py-16 md:py-20">
-        <motion.div 
+        <motion.div
           className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           initial="hidden"
           animate={featuresInView ? "visible" : "hidden"}
@@ -203,18 +184,14 @@ export default function HomePage() {
         >
           <div className="mb-12 text-center">
             <motion.div variants={fadeInUp}>
-              <Badge variant="outline" className="mb-4">Features</Badge>
+              <Badge variant="outline" className="mb-4">
+                Features
+              </Badge>
             </motion.div>
-            <motion.h2 
-              variants={fadeInUp}
-              className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl"
-            >
+            <motion.h2 variants={fadeInUp} className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
               Everything You Need to Learn
             </motion.h2>
-            <motion.p 
-              variants={fadeInUp}
-              className="mt-3 text-base text-muted-foreground sm:text-lg"
-            >
+            <motion.p variants={fadeInUp} className="mt-3 text-base text-muted-foreground sm:text-lg">
               Powerful features designed for serious learners
             </motion.p>
           </div>
@@ -223,15 +200,17 @@ export default function HomePage() {
             {features.map((feature, index) => (
               <motion.div key={feature.title} variants={fadeInUp}>
                 <Card className="group relative h-full overflow-hidden border-2 transition-all hover:shadow-lg">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 transition-opacity group-hover:opacity-5`} />
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 transition-opacity group-hover:opacity-5`}
+                  />
                   <CardHeader className="space-y-3">
-                    <div className={`inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${feature.gradient} text-white`}>
+                    <div
+                      className={`inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${feature.gradient} text-white`}
+                    >
                       <feature.icon className="h-5 w-5" />
                     </div>
                     <CardTitle className="text-lg">{feature.title}</CardTitle>
-                    <CardDescription className="text-sm">
-                      {feature.description}
-                    </CardDescription>
+                    <CardDescription className="text-sm">{feature.description}</CardDescription>
                   </CardHeader>
                 </Card>
               </motion.div>
@@ -250,15 +229,15 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <Badge variant="outline" className="mb-4">Why Coursio</Badge>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                Your Personal Learning Platform
-              </h2>
+              <Badge variant="outline" className="mb-4">
+                Why Coursio
+              </Badge>
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Your Personal Learning Platform</h2>
               <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-                Stop juggling multiple tabs and losing track of your learning progress. 
-                Coursio gives you a centralized dashboard to manage all your educational content.
+                Stop juggling multiple tabs and losing track of your learning progress. Coursio gives you a centralized
+                dashboard to manage all your educational content.
               </p>
-              
+
               <div className="mt-6 space-y-3">
                 {benefits.map((benefit, index) => (
                   <motion.div
@@ -311,7 +290,7 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section ref={ctaRef} className="py-12 sm:py-16 md:py-20">
-        <motion.div 
+        <motion.div
           className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           initial="hidden"
           animate={ctaInView ? "visible" : "hidden"}
@@ -320,12 +299,10 @@ export default function HomePage() {
           <Card className="relative overflow-hidden border-2">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-pink-600/10 to-blue-600/10" />
             <CardContent className="relative px-6 py-10 text-center sm:px-10 sm:py-12">
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
-                Ready to Start Learning?
-              </h2>
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">Ready to Start Learning?</h2>
               <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
-                Join thousands of learners who are already tracking their progress with Coursio. 
-                Get started in less than a minute.
+                Join thousands of learners who are already tracking their progress with Coursio. Get started in less
+                than a minute.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-4">
                 <Button size="lg" asChild className="gap-2">
@@ -335,9 +312,7 @@ export default function HomePage() {
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/sign-in">
-                    Sign In
-                  </Link>
+                  <Link href="/sign-in">Sign In</Link>
                 </Button>
               </div>
             </CardContent>
@@ -358,31 +333,70 @@ export default function HomePage() {
                 Transform YouTube playlists into structured learning experiences.
               </p>
             </div>
-            
+
             <div>
               <h3 className="mb-3 text-sm font-semibold">Product</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/sign-up" className="text-muted-foreground hover:text-foreground">Get Started</Link></li>
-                <li><Link href="/sign-in" className="text-muted-foreground hover:text-foreground">Sign In</Link></li>
-                <li><Link href="#features" className="text-muted-foreground hover:text-foreground">Features</Link></li>
+                <li>
+                  <Link href="/sign-up" className="text-muted-foreground hover:text-foreground">
+                    Get Started
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/sign-in" className="text-muted-foreground hover:text-foreground">
+                    Sign In
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#features" className="text-muted-foreground hover:text-foreground">
+                    Features
+                  </Link>
+                </li>
               </ul>
             </div>
 
             <div>
               <h3 className="mb-3 text-sm font-semibold">Resources</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="https://github.com/siddharthamaity/nextjs-15-starter-shadcn" className="text-muted-foreground hover:text-foreground">GitHub</Link></li>
-                <li><Link href="https://nextjs.org" className="text-muted-foreground hover:text-foreground">Documentation</Link></li>
-                <li><Link href="https://ui.shadcn.com" className="text-muted-foreground hover:text-foreground">shadcn/ui</Link></li>
+                <li>
+                  <Link
+                    href="https://github.com/siddharthamaity/nextjs-15-starter-shadcn"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    GitHub
+                  </Link>
+                </li>
+                <li>
+                  <Link href="https://nextjs.org" className="text-muted-foreground hover:text-foreground">
+                    Documentation
+                  </Link>
+                </li>
+                <li>
+                  <Link href="https://ui.shadcn.com" className="text-muted-foreground hover:text-foreground">
+                    shadcn/ui
+                  </Link>
+                </li>
               </ul>
             </div>
 
             <div>
               <h3 className="mb-3 text-sm font-semibold">Legal</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="#" className="text-muted-foreground hover:text-foreground">Privacy</Link></li>
-                <li><Link href="#" className="text-muted-foreground hover:text-foreground">Terms</Link></li>
-                <li><Link href="#" className="text-muted-foreground hover:text-foreground">License</Link></li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Privacy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Terms
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    License
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

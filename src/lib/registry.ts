@@ -1,6 +1,21 @@
 import { Index } from '@/__registry__';
+import { z } from 'zod';
 
-import { registryItemSchema } from 'shadcn/registry';
+// Define a basic registry item schema
+const registryItemSchema = z.object({
+    name: z.string(),
+    type: z.string().optional(),
+    files: z.array(z.object({
+        path: z.string(),
+        content: z.string().optional(),
+        type: z.string().optional(),
+        target: z.string().optional(),
+    })).optional().default([]),
+    dependencies: z.array(z.string()).optional(),
+    devDependencies: z.array(z.string()).optional(),
+    registryDependencies: z.array(z.string()).optional(),
+    meta: z.record(z.string(), z.any()).optional(),
+}).passthrough();
 
 const memoizedIndex: typeof Index = Object.fromEntries(
     Object.entries(Index).map(([style, items]) => [style, { ...items }])

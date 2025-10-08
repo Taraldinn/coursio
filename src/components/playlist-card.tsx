@@ -11,7 +11,7 @@ interface PlaylistCardProps {
     id: string
     title: string
     description: string | null
-    thumbnailUrl: string | null
+    thumbnail: string | null
     category: {
       name: string
     } | null
@@ -35,10 +35,10 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
     <Link href={`/dashboard/playlists/${playlist.id}`}>
       <Card className="h-full transition-all hover:shadow-lg">
         <CardHeader className="space-y-2">
-          {playlist.thumbnailUrl && (
+          {playlist.thumbnail && (
             <div className="aspect-video overflow-hidden rounded-md">
               <img
-                src={playlist.thumbnailUrl}
+                src={playlist.thumbnail}
                 alt={playlist.title}
                 className="h-full w-full object-cover"
               />

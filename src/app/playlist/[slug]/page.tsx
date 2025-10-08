@@ -85,13 +85,14 @@ export default function PlaylistPage() {
     PUBLIC: { label: 'Public', variant: 'default' as const },
     UNLISTED: { label: 'Unlisted', variant: 'secondary' as const },
     PRIVATE: { label: 'Private', variant: 'outline' as const }
-  }[playlist.visibility];
+  }[playlist.visibility as 'PUBLIC' | 'UNLISTED' | 'PRIVATE'];
 
   const difficultyColor = {
     BEGINNER: 'bg-green-500/10 text-green-600 dark:text-green-400',
     INTERMEDIATE: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
     ADVANCED: 'bg-red-500/10 text-red-600 dark:text-red-400'
-  }[playlist.difficulty || ''];
+  }[playlist.difficulty as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'];
+
 
   return (
     <>

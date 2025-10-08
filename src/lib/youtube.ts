@@ -28,7 +28,7 @@ export async function fetchYouTubePlaylist(playlistId: string) {
     let nextPageToken: string | undefined = undefined
     
     do {
-      const url = nextPageToken
+      const url: string = nextPageToken
         ? `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=${playlistId}&pageToken=${nextPageToken}&key=${apiKey}`
         : `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=${playlistId}&key=${apiKey}`
       

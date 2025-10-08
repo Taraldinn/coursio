@@ -1,31 +1,28 @@
+import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
-import { Providers } from "@/components/providers"
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const session = await auth()
+  const user = await currentUser()
 
-  if (!session) {
-    redirect("/auth/signin")
+  if (!user) {
+    redirect("/sign-in")
   }
 
   return (
-    <Providers>
-      <div className="flex h-screen overflow-hidden">
-        <Sidebar />
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-6">
-            {children}
-          </main>
-        </div>
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 pl-56">
+        <Header />
+        <main className="p-4">
+          {children}
+        </main>
       </div>
-    </Providers>
+    </div>
   )
 }

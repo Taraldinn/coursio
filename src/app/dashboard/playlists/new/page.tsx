@@ -55,7 +55,7 @@ export default function NewPlaylistPage() {
       if (customDescription) {
         formData.append("description", customDescription)
       }
-      formData.append("isPublic", "true")
+      formData.append("visibility", "PUBLIC")
 
       const result = await createCustomPlaylist(formData)
 

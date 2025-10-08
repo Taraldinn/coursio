@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { currentUser } from "@clerk/nextjs/server"
 import { redirect, notFound } from "next/navigation"
 import prisma from "@/lib/prisma"
 import Link from "next/link"
@@ -16,10 +16,10 @@ interface PlaylistPageProps {
 }
 
 export default async function PlaylistPage({ params }: PlaylistPageProps) {
-  const session = await auth()
+  const user = await currentUser()
 
-  if (!session?.user?.id) {
-    redirect("/auth/signin")
+  if (!user?.id) {
+    redirect("/sign-in")
   }
 
   const { id } = await params
@@ -36,7 +36,7 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
         include: {
           progress: {
             where: {
-              userId: session.user.id,
+              userId: user.id,
             },
           },
         },

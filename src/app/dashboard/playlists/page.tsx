@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
+import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
 import { PlaylistCard } from "@/components/playlist-card"
 import { Button } from "@/components/ui/button"
@@ -7,19 +7,19 @@ import { PlusCircle } from "lucide-react"
 import Link from "next/link"
 
 export default async function PlaylistsPage() {
-  const session = await auth()
+  const user = await currentUser()
 
-  if (!session?.user?.id) {
-    redirect("/auth/signin")
+  if (!user?.id) {
+    redirect("/sign-in")
   }
 
   const playlists = await prisma.playlist.findMany({
-    where: { userId: session.user.id },
+    where: { userId: user.id },
     include: {
       videos: {
         include: {
           progress: {
-            where: { userId: session.user.id },
+            where: { userId: user.id },
           },
         },
       },

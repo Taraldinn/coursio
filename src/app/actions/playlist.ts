@@ -1,6 +1,6 @@
 "use server"
 
-import { auth } from "@/lib/auth"
+import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { fetchYouTubePlaylist, extractYouTubePlaylistId } from "@/lib/youtube"
@@ -11,13 +11,13 @@ const playlistSchema = z.object({
   description: z.string().optional(),
   thumbnail: z.string().optional(),
   categoryId: z.string().optional(),
-  isPublic: z.boolean().default(true),
+  visibility: z.enum(['PUBLIC', 'UNLISTED', 'PRIVATE']).default('PUBLIC'),
 })
 
 export async function createPlaylistFromYouTube(youtubeUrl: string) {
-  const session = await auth()
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return { error: "Unauthorized" }
   }
 
@@ -39,13 +39,29 @@ export async function createPlaylistFromYouTube(youtubeUrl: string) {
 
     const youtubeData = await fetchYouTubePlaylist(playlistId)
 
+    // Generate unique slug from title
+    const baseSlug = youtubeData.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+    
+    let slug = baseSlug
+    let counter = 1
+    while (await prisma.playlist.findFirst({ where: { slug } })) {
+      slug = `${baseSlug}-${counter}`
+      counter++
+    }
+
     const playlist = await prisma.playlist.create({
       data: {
         title: youtubeData.title,
         description: youtubeData.description,
         thumbnail: youtubeData.thumbnail,
         youtubePlaylistId: playlistId,
-        userId: session.user.id,
+        userId: user.id,
+        slug,
+        mode: 'YOUTUBE_IMPORT',
+        visibility: 'PUBLIC',
         videos: {
           create: youtubeData.videos,
         },
@@ -65,9 +81,9 @@ export async function createPlaylistFromYouTube(youtubeUrl: string) {
 }
 
 export async function createCustomPlaylist(formData: FormData) {
-  const session = await auth()
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return { error: "Unauthorized" }
   }
 
@@ -76,8 +92,8 @@ export async function createCustomPlaylist(formData: FormData) {
       title: formData.get("title") as string,
       description: formData.get("description") as string,
       thumbnail: formData.get("thumbnail") as string,
-      categoryId: formData.get("categoryId") as string,
-      isPublic: formData.get("isPublic") === "true",
+      categoryId: formData.get("categoryId") as string | undefined,
+      visibility: (formData.get("visibility") as string) || 'PUBLIC',
     }
 
     const validated = playlistSchema.parse(data)
@@ -85,7 +101,7 @@ export async function createCustomPlaylist(formData: FormData) {
     const playlist = await prisma.playlist.create({
       data: {
         ...validated,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 
@@ -94,16 +110,16 @@ export async function createCustomPlaylist(formData: FormData) {
     return { success: true, playlistId: playlist.id }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { error: error.errors[0].message }
+      return { error: error.issues[0].message }
     }
     return { error: "Failed to create playlist" }
   }
 }
 
 export async function deletePlaylist(playlistId: string) {
-  const session = await auth()
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return { error: "Unauthorized" }
   }
 
@@ -112,7 +128,7 @@ export async function deletePlaylist(playlistId: string) {
       where: { id: playlistId },
     })
 
-    if (!playlist || playlist.userId !== session.user.id) {
+    if (!playlist || playlist.userId !== user.id) {
       return { error: "Playlist not found" }
     }
 
@@ -128,10 +144,10 @@ export async function deletePlaylist(playlistId: string) {
   }
 }
 
-export async function updatePlaylistVisibility(playlistId: string, isPublic: boolean) {
-  const session = await auth()
+export async function updatePlaylistVisibility(playlistId: string, visibility: 'PUBLIC' | 'UNLISTED' | 'PRIVATE') {
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return { error: "Unauthorized" }
   }
 
@@ -140,13 +156,13 @@ export async function updatePlaylistVisibility(playlistId: string, isPublic: boo
       where: { id: playlistId },
     })
 
-    if (!playlist || playlist.userId !== session.user.id) {
+    if (!playlist || playlist.userId !== user.id) {
       return { error: "Playlist not found" }
     }
 
     await prisma.playlist.update({
       where: { id: playlistId },
-      data: { isPublic },
+      data: { visibility },
     })
 
     revalidatePath("/dashboard")

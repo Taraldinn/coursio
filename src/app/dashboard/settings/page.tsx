@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
+import { currentUser } from "@clerk/nextjs/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -8,10 +8,10 @@ import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default async function SettingsPage() {
-  const session = await auth()
+  const user = await currentUser()
 
-  if (!session?.user) {
-    redirect("/auth/signin")
+  if (!user) {
+    redirect("/sign-in")
   }
 
   return (
@@ -35,9 +35,9 @@ export default async function SettingsPage() {
           <CardContent className="space-y-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={session.user.image || undefined} />
+                <AvatarImage src={user.imageUrl || undefined} />
                 <AvatarFallback className="text-2xl">
-                  {session.user.name?.charAt(0) || "U"}
+                  {user.firstName?.charAt(0) || user.username?.charAt(0) || "U"}
                 </AvatarFallback>
               </Avatar>
               <div>
@@ -58,7 +58,7 @@ export default async function SettingsPage() {
                 <Input
                   id="name"
                   placeholder="Your name"
-                  defaultValue={session.user.name || ""}
+                  defaultValue={user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username || ""}
                   disabled
                 />
               </div>
@@ -69,7 +69,7 @@ export default async function SettingsPage() {
                   id="email"
                   type="email"
                   placeholder="your.email@example.com"
-                  defaultValue={session.user.email || ""}
+                  defaultValue={user.emailAddresses[0]?.emailAddress || ""}
                   disabled
                 />
                 <p className="text-xs text-muted-foreground">

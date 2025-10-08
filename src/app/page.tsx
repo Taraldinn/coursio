@@ -108,10 +108,10 @@ export default function HomePage() {
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
-              <Link href="/auth/signin">Sign In</Link>
+              <Link href="/sign-in">Sign In</Link>
             </Button>
             <Button asChild>
-              <Link href="/auth/signup">Get Started</Link>
+              <Link href="/sign-up">Get Started</Link>
             </Button>
           </div>
         </div>
@@ -159,7 +159,7 @@ export default function HomePage() {
               className="mt-8 flex flex-wrap justify-center gap-4"
             >
               <Button size="lg" asChild className="gap-2">
-                <Link href="/auth/signup">
+                <Link href="/sign-up">
                   Start Learning Free
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -278,7 +278,7 @@ export default function HomePage() {
               </div>
 
               <Button size="lg" asChild className="mt-6 gap-2">
-                <Link href="/auth/signup">
+                <Link href="/sign-up">
                   Start Your Journey
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -329,13 +329,13 @@ export default function HomePage() {
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-4">
                 <Button size="lg" asChild className="gap-2">
-                  <Link href="/auth/signup">
+                  <Link href="/sign-up">
                     Create Free Account
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/auth/signin">
+                  <Link href="/sign-in">
                     Sign In
                   </Link>
                 </Button>
@@ -362,8 +362,8 @@ export default function HomePage() {
             <div>
               <h3 className="mb-3 text-sm font-semibold">Product</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/auth/signup" className="text-muted-foreground hover:text-foreground">Get Started</Link></li>
-                <li><Link href="/auth/signin" className="text-muted-foreground hover:text-foreground">Sign In</Link></li>
+                <li><Link href="/sign-up" className="text-muted-foreground hover:text-foreground">Get Started</Link></li>
+                <li><Link href="/sign-in" className="text-muted-foreground hover:text-foreground">Sign In</Link></li>
                 <li><Link href="#features" className="text-muted-foreground hover:text-foreground">Features</Link></li>
               </ul>
             </div>

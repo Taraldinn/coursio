@@ -1,6 +1,6 @@
 "use server"
 
-import { auth } from "@/lib/auth"
+import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
 
 export async function updateProgress(
@@ -8,9 +8,9 @@ export async function updateProgress(
   watchedDuration: number,
   completed: boolean = false
 ) {
-  const session = await auth()
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return { error: "Unauthorized" }
   }
 
@@ -18,7 +18,7 @@ export async function updateProgress(
     const progress = await prisma.userVideoProgress.upsert({
       where: {
         userId_videoId: {
-          userId: session.user.id,
+          userId: user.id,
           videoId,
         },
       },
@@ -28,7 +28,7 @@ export async function updateProgress(
         lastWatchedAt: new Date(),
       },
       create: {
-        userId: session.user.id,
+        userId: user.id,
         videoId,
         watchedDuration,
         completed,
@@ -47,9 +47,9 @@ export async function markVideoCompleted(videoId: string) {
 }
 
 export async function getPlaylistProgress(playlistId: string) {
-  const session = await auth()
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return { total: 0, completed: 0, percentage: 0 }
   }
 
@@ -60,7 +60,7 @@ export async function getPlaylistProgress(playlistId: string) {
         videos: {
           include: {
             progress: {
-              where: { userId: session.user.id },
+              where: { userId: user.id },
             },
           },
         },

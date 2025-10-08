@@ -1,13 +1,13 @@
 "use server"
 
-import { auth } from "@/lib/auth"
+import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 
 export async function upsertNote(videoId: string, content: string) {
-  const session = await auth()
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return { error: "Unauthorized" }
   }
 
@@ -15,7 +15,7 @@ export async function upsertNote(videoId: string, content: string) {
     const note = await prisma.note.upsert({
       where: {
         userId_videoId: {
-          userId: session.user.id,
+          userId: user.id,
           videoId,
         },
       },
@@ -24,7 +24,7 @@ export async function upsertNote(videoId: string, content: string) {
         updatedAt: new Date(),
       },
       create: {
-        userId: session.user.id,
+        userId: user.id,
         videoId,
         content,
       },
@@ -38,9 +38,9 @@ export async function upsertNote(videoId: string, content: string) {
 }
 
 export async function getNote(videoId: string) {
-  const session = await auth()
+  const user = await currentUser()
   
-  if (!session?.user?.id) {
+  if (!user?.id) {
     return null
   }
 
@@ -48,7 +48,7 @@ export async function getNote(videoId: string) {
     const note = await prisma.note.findUnique({
       where: {
         userId_videoId: {
-          userId: session.user.id,
+          userId: user.id,
           videoId,
         },
       },

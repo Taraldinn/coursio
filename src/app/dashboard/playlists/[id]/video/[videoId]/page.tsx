@@ -1,5 +1,5 @@
 import { redirect, notFound } from "next/navigation"
-import { auth } from "@/lib/auth"
+import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
 import { VideoPlayer } from "@/components/video-player"
 import { EnhancedNoteEditor } from "@/components/enhanced-note-editor"
@@ -16,10 +16,10 @@ interface VideoPageProps {
 }
 
 export default async function VideoPage({ params }: VideoPageProps) {
-  const session = await auth()
+  const user = await currentUser()
 
-  if (!session?.user?.id) {
-    redirect("/auth/signin")
+  if (!user?.id) {
+    redirect("/sign-in")
   }
 
   const { id, videoId } = await params
@@ -41,12 +41,7 @@ export default async function VideoPage({ params }: VideoPageProps) {
       },
       progress: {
         where: {
-          userId: session.user.id,
-        },
-      },
-      notes: {
-        where: {
-          userId: session.user.id,
+          userId: user.id,
         },
       },
     },
@@ -61,7 +56,8 @@ export default async function VideoPage({ params }: VideoPageProps) {
   const nextVideo = currentIndex < video.playlist.videos.length - 1 ? video.playlist.videos[currentIndex + 1] : null
 
   const userProgress = video.progress[0]
-  const userNote = video.notes[0]
+  // notes is a string field on the video, not a relation
+  const userNote = video.notes
 
   return (
     <div className="h-full space-y-3">
@@ -83,7 +79,7 @@ export default async function VideoPage({ params }: VideoPageProps) {
               videos={video.playlist.videos}
               currentVideoId={video.id}
               playlistId={id}
-              userId={session.user.id}
+              userId={user.id}
             />
           </div>
 
@@ -92,7 +88,7 @@ export default async function VideoPage({ params }: VideoPageProps) {
             <h3 className="mb-3 text-sm font-semibold">Notes</h3>
             <EnhancedNoteEditor 
               videoId={video.id} 
-              initialContent={userNote?.content || ""} 
+              initialContent={userNote || ""} 
             />
           </div>
         </div>
@@ -104,7 +100,7 @@ export default async function VideoPage({ params }: VideoPageProps) {
               videoId={video.id}
               url={video.url}
               youtubeId={video.youtubeId}
-              initialProgress={userProgress?.currentTime || 0}
+              initialProgress={userProgress?.watchedDuration || 0}
             />
             <div>
               <h1 className="text-xl font-bold">{video.title}</h1>

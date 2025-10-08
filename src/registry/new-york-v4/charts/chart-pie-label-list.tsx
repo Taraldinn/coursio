@@ -61,7 +61,7 @@ export function ChartPieLabelList() {
                                 className='fill-background'
                                 stroke='none'
                                 fontSize={12}
-                                formatter={(label) => chartConfig[label as keyof typeof chartConfig]?.label}
+                                formatter={(label: string) => chartConfig[label as keyof typeof chartConfig]?.label}
                             />
                         </Pie>
                     </PieChart>

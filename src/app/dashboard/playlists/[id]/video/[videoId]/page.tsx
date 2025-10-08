@@ -7,6 +7,7 @@ import { CompactVideoList } from "@/components/compact-video-list"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { CollapsibleNotes } from "@/components/collapsible-notes"
 
 interface VideoPageProps {
   params: Promise<{
@@ -60,7 +61,7 @@ export default async function VideoPage({ params }: VideoPageProps) {
   const userNote = video.notes
 
   return (
-    <div className="h-full space-y-3">
+    <div className="h-full space-y-4">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="sm" asChild>
           <Link href={`/dashboard/playlists/${id}`}>
@@ -70,32 +71,10 @@ export default async function VideoPage({ params }: VideoPageProps) {
         </Button>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
-        {/* Left Sidebar - Notes & Playlist */}
+      <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+        {/* Left Main Content - Video */}
         <div className="space-y-4">
-          {/* Compact Playlist Dropdown */}
-          <div className="rounded-lg border bg-card">
-            <CompactVideoList
-              videos={video.playlist.videos}
-              currentVideoId={video.id}
-              playlistId={id}
-              userId={user.id}
-            />
-          </div>
-
-          {/* Enhanced Notes Editor */}
-          <div className="rounded-lg border bg-card p-4">
-            <h3 className="mb-3 text-sm font-semibold">Notes</h3>
-            <EnhancedNoteEditor 
-              videoId={video.id} 
-              initialContent={userNote || ""} 
-            />
-          </div>
-        </div>
-
-        {/* Right Main Content - Video */}
-        <div className="space-y-4">
-          <div className="space-y-3">
+          <div className="space-y-4">
             <VideoPlayer
               videoId={video.id}
               url={video.url}
@@ -103,15 +82,15 @@ export default async function VideoPage({ params }: VideoPageProps) {
               initialProgress={userProgress?.watchedDuration || 0}
             />
             <div>
-              <h1 className="text-xl font-bold">{video.title}</h1>
+              <h1 className="text-2xl font-bold">{video.title}</h1>
               {video.description && (
-                <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{video.description}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{video.description}</p>
               )}
             </div>
           </div>
 
           {/* Navigation Controls */}
-          <div className="flex items-center justify-between border-t pt-3">
+          <div className="flex items-center justify-between rounded-lg border bg-card p-4">
             <Button variant="outline" size="sm" disabled={!prevVideo} asChild={!!prevVideo}>
               {prevVideo ? (
                 <Link href={`/dashboard/playlists/${id}/video/${prevVideo.id}`}>
@@ -126,7 +105,7 @@ export default async function VideoPage({ params }: VideoPageProps) {
               )}
             </Button>
 
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm font-medium text-muted-foreground">
               {currentIndex + 1} / {video.playlist.videos.length}
             </span>
 
@@ -143,6 +122,25 @@ export default async function VideoPage({ params }: VideoPageProps) {
                 </span>
               )}
             </Button>
+          </div>
+        </div>
+
+        {/* Right Sidebar - Notes & Playlist */}
+        <div className="flex flex-col gap-6">
+          {/* Collapsible Notes Editor */}
+          <CollapsibleNotes 
+            videoId={video.id} 
+            initialContent={userNote || ""} 
+          />
+
+          {/* Compact Playlist Dropdown */}
+          <div className="rounded-lg border bg-card shadow-sm">
+            <CompactVideoList
+              videos={video.playlist.videos}
+              currentVideoId={video.id}
+              playlistId={id}
+              userId={user.id}
+            />
           </div>
         </div>
       </div>

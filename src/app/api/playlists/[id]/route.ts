@@ -5,11 +5,11 @@ import prisma from '@/lib/prisma';
 // GET /api/playlists/[id] - Get playlist by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
-    const { id } = params;
+    const { id } = await params;
 
     const playlist = await prisma.playlist.findUnique({
       where: { id },
@@ -17,8 +17,8 @@ export async function GET(
         category: true,
         videos: {
           orderBy: { position: 'asc' },
-          include: userId ? {
-            progress: {
+          include: {
+            progress: userId ? {
               where: { userId },
               select: {
                 completed: true,
@@ -26,8 +26,8 @@ export async function GET(
                 progressPercent: true,
                 watchedDuration: true
               }
-            }
-          } : false
+            } : undefined
+          }
         }
       }
     });
@@ -79,7 +79,7 @@ export async function GET(
 // PATCH /api/playlists/[id] - Update playlist
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -91,7 +91,7 @@ export async function PATCH(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
 
     // Check ownership or editor permission
@@ -149,7 +149,7 @@ export async function PATCH(
 // DELETE /api/playlists/[id] - Delete playlist
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -161,7 +161,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Check ownership
     const playlist = await prisma.playlist.findUnique({

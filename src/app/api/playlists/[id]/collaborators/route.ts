@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 // POST /api/playlists/[id]/collaborators - Add collaborator
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -17,7 +17,7 @@ export async function POST(
       );
     }
 
-    const { id: playlistId } = params;
+    const { id: playlistId } = await params;
     const { collaboratorUserId, role = 'VIEWER' } = await request.json();
 
     // Check if requester is owner or admin
@@ -71,11 +71,11 @@ export async function POST(
 // GET /api/playlists/[id]/collaborators - List collaborators
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
-    const { id: playlistId } = params;
+    const { id: playlistId } = await params;
 
     // Check if user has access to view collaborators
     const playlist = await prisma.playlist.findUnique({

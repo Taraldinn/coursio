@@ -60,7 +60,8 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
     if (hours > 0) {
       return `${hours}h ${mins % 60}m`
     }
-    return `${mins}m`
+    
+return `${mins}m`
   }
 
   return (
@@ -142,7 +143,8 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
           <div className="space-y-1">
             {playlist.videos.map((video: any, index: number) => {
               const isCompleted = video.progress[0]?.completed || false
-              return (
+              
+return (
                 <Button
                   key={video.id}
                   variant="ghost"

@@ -26,7 +26,8 @@ export async function generateSlug(title: string): Promise<string> {
  */
 export function generateShareableLink(slug: string): string {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  return `${baseUrl}/playlist/${slug}`;
+  
+return `${baseUrl}/playlist/${slug}`;
 }
 
 /**
@@ -41,7 +42,8 @@ export function generateQRCodeUrl(url: string): string {
  */
 export function generateEmbedCode(slug: string, width = 560, height = 315): string {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  return `<iframe src="${baseUrl}/embed/${slug}" width="${width}" height="${height}" frameborder="0" allowfullscreen></iframe>`;
+  
+return `<iframe src="${baseUrl}/embed/${slug}" width="${width}" height="${height}" frameborder="0" allowfullscreen></iframe>`;
 }
 
 /**
@@ -88,7 +90,8 @@ export function extractYouTubeVideoId(url: string): string | null {
  */
 export function extractVimeoVideoId(url: string): string | null {
   const match = url.match(/vimeo\.com\/(\d+)/);
-  return match ? match[1] : null;
+  
+return match ? match[1] : null;
 }
 
 /**
@@ -101,7 +104,8 @@ export function detectVideoProvider(url: string): 'YOUTUBE' | 'VIMEO' | 'DIRECT'
   if (url.includes('vimeo.com')) {
     return 'VIMEO';
   }
-  return 'DIRECT';
+  
+return 'DIRECT';
 }
 
 /**
@@ -119,8 +123,10 @@ export function isValidVideoUrl(url: string): boolean {
       return extractVimeoVideoId(url) !== null;
     }
     // For direct links, just check if it's a valid URL
+
     return true;
   } catch {
+
     return false;
   }
 }
@@ -136,7 +142,8 @@ export function formatDuration(seconds: number): string {
   if (hours > 0) {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
-  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  
+return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }
 
 /**

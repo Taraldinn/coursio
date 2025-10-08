@@ -38,7 +38,8 @@ export async function updateProgress(
     return { success: true, progressId: progress.id }
   } catch (error) {
     console.error("Error updating progress:", error)
-    return { error: "Failed to update progress" }
+    
+return { error: "Failed to update progress" }
   }
 }
 
@@ -80,6 +81,7 @@ export async function getPlaylistProgress(playlistId: string) {
     return { total, completed, percentage }
   } catch (error) {
     console.error("Error fetching progress:", error)
-    return { total: 0, completed: 0, percentage: 0 }
+    
+return { total: 0, completed: 0, percentage: 0 }
   }
 }

@@ -91,7 +91,8 @@ export async function sendVerificationEmail(email: string, username: string, ver
 
   try {
     await transporter.sendMail(mailOptions)
-    return { success: true }
+    
+return { success: true }
   } catch (error) {
     console.error("Error sending verification email:", error)
     throw new Error("Failed to send verification email")
@@ -191,7 +192,8 @@ export async function sendPasswordResetEmail(email: string, username: string, re
 
   try {
     await transporter.sendMail(mailOptions)
-    return { success: true }
+    
+return { success: true }
   } catch (error) {
     console.error("Error sending password reset email:", error)
     throw new Error("Failed to send password reset email")
@@ -266,10 +268,12 @@ export async function sendWelcomeEmail(email: string, username: string) {
 
   try {
     await transporter.sendMail(mailOptions)
+    
     return { success: true }
   } catch (error) {
     console.error("Error sending welcome email:", error)
     // Don't throw error for welcome email, just log it
+
     return { success: false }
   }
 }

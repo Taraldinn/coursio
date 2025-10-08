@@ -22,7 +22,8 @@ export async function uploadToImgbb(file: File): Promise<string> {
     }
 
     const data = await response.json()
-    return data.data.url
+    
+return data.data.url
   } catch (error) {
     console.error("Error uploading to ImgBB:", error)
     throw error

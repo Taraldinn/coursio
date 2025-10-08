@@ -61,7 +61,8 @@ export async function POST(
     return NextResponse.json(collaborator, { status: 201 });
   } catch (error) {
     console.error('Error adding collaborator:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to add collaborator' },
       { status: 500 }
     );
@@ -114,7 +115,8 @@ export async function GET(
     return NextResponse.json(collaborators);
   } catch (error) {
     console.error('Error fetching collaborators:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to fetch collaborators' },
       { status: 500 }
     );

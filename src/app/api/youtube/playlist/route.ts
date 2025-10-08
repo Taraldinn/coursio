@@ -105,7 +105,8 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching YouTube playlist:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to fetch YouTube playlist' },
       { status: 500 }
     );

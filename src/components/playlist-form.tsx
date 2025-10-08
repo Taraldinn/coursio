@@ -46,7 +46,8 @@ export function PlaylistForm({ categories = [] }: PlaylistFormProps) {
   const fetchYouTubePlaylist = async () => {
     if (!youtubeUrl) {
       toast.error('Please enter a YouTube playlist URL');
-      return;
+      
+return;
     }
 
     setLoadingYouTube(true);
@@ -139,7 +140,8 @@ export function PlaylistForm({ categories = [] }: PlaylistFormProps) {
     
     if (!title) {
       toast.error('Title is required');
-      return;
+      
+return;
     }
 
     setLoading(true);

@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const difficulty = searchParams.get('difficulty');
     const search = searchParams.get('search');
 
-    let where: any = {};
+    const where: any = {};
 
     // Filter logic
     if (filter === 'my' && userId) {
@@ -94,7 +94,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(playlists);
   } catch (error) {
     console.error('Error fetching playlists:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to fetch playlists' },
       { status: 500 }
     );
@@ -181,7 +182,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(playlist, { status: 201 });
   } catch (error) {
     console.error('Error creating playlist:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to create playlist' },
       { status: 500 }
     );

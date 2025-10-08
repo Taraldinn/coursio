@@ -36,6 +36,7 @@ export async function GET(
     return NextResponse.json(progressMap)
   } catch (error) {
     console.error("Error fetching progress:", error)
-    return NextResponse.json({ error: "Failed to fetch progress" }, { status: 500 })
+    
+return NextResponse.json({ error: "Failed to fetch progress" }, { status: 500 })
   }
 }

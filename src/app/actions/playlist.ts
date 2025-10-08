@@ -76,7 +76,8 @@ export async function createPlaylistFromYouTube(youtubeUrl: string) {
     return { success: true, playlistId: playlist.id }
   } catch (error) {
     console.error("Error creating playlist:", error)
-    return { error: "Failed to import playlist" }
+    
+return { error: "Failed to import playlist" }
   }
 }
 
@@ -98,11 +99,20 @@ export async function createCustomPlaylist(formData: FormData) {
 
     const validated = playlistSchema.parse(data)
 
+    const createData: any = {
+      title: validated.title,
+      description: validated.description,
+      thumbnail: validated.thumbnail,
+      visibility: validated.visibility,
+      userId: user.id,
+    }
+
+    if (validated.categoryId) {
+      createData.categoryId = validated.categoryId
+    }
+
     const playlist = await prisma.playlist.create({
-      data: {
-        ...validated,
-        userId: user.id,
-      },
+      data: createData,
     })
 
     revalidatePath("/dashboard")
@@ -112,7 +122,8 @@ export async function createCustomPlaylist(formData: FormData) {
     if (error instanceof z.ZodError) {
       return { error: error.issues[0].message }
     }
-    return { error: "Failed to create playlist" }
+    
+return { error: "Failed to create playlist" }
   }
 }
 

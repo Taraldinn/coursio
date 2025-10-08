@@ -26,7 +26,8 @@ export async function upsertNote(videoId: string, content: string) {
     return { success: true, videoId: video.id }
   } catch (error) {
     console.error("Error saving note:", error)
-    return { error: "Failed to save note" }
+    
+return { error: "Failed to save note" }
   }
 }
 
@@ -50,6 +51,7 @@ export async function getNote(videoId: string) {
     return video?.notes || ""
   } catch (error) {
     console.error("Error fetching note:", error)
-    return ""
+    
+return ""
   }
 }

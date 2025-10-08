@@ -35,7 +35,8 @@ export function CompactVideoList({
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    
+return `${minutes}:${secs.toString().padStart(2, "0")}`
   }
 
   const currentIndex = videos.findIndex((v: any) => v.id === currentVideoId)

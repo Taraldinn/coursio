@@ -53,7 +53,8 @@ export function ThemeProvider({
         : "light"
 
       root.classList.add(systemTheme)
-      return
+      
+return
     }
 
     root.classList.add(theme)

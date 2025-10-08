@@ -69,7 +69,8 @@ export async function syncPlaylist(playlistId: string, youtubePlaylistId: string
     }
   } catch (error: any) {
     console.error("Sync error:", error)
-    return { 
+    
+return { 
       success: false, 
       error: error.message || "Failed to sync playlist" 
     }
@@ -84,7 +85,8 @@ export async function toggleAutoSync(playlistId: string, enabled: boolean) {
     })
 
     revalidatePath(`/dashboard/playlists/${playlistId}`)
-    return { success: true }
+    
+return { success: true }
   } catch (error: any) {
     return { 
       success: false, 

@@ -69,7 +69,8 @@ export async function GET(
     return NextResponse.json(playlist);
   } catch (error) {
     console.error('Error fetching playlist:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to fetch playlist' },
       { status: 500 }
     );
@@ -139,7 +140,8 @@ export async function PATCH(
     return NextResponse.json(updated);
   } catch (error) {
     console.error('Error updating playlist:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to update playlist' },
       { status: 500 }
     );
@@ -190,7 +192,8 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting playlist:', error);
-    return NextResponse.json(
+    
+return NextResponse.json(
       { error: 'Failed to delete playlist' },
       { status: 500 }
     );

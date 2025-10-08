@@ -12,25 +12,18 @@ export async function upsertNote(videoId: string, content: string) {
   }
 
   try {
-    const note = await prisma.note.upsert({
+    // Update the notes field on the Video model
+    const video = await prisma.video.update({
       where: {
-        userId_videoId: {
-          userId: user.id,
-          videoId,
-        },
+        id: videoId,
       },
-      update: {
-        content,
+      data: {
+        notes: content,
         updatedAt: new Date(),
-      },
-      create: {
-        userId: user.id,
-        videoId,
-        content,
       },
     })
 
-    return { success: true, noteId: note.id }
+    return { success: true, videoId: video.id }
   } catch (error) {
     console.error("Error saving note:", error)
     return { error: "Failed to save note" }
@@ -45,16 +38,16 @@ export async function getNote(videoId: string) {
   }
 
   try {
-    const note = await prisma.note.findUnique({
+    const video = await prisma.video.findUnique({
       where: {
-        userId_videoId: {
-          userId: user.id,
-          videoId,
-        },
+        id: videoId,
+      },
+      select: {
+        notes: true,
       },
     })
 
-    return note?.content || ""
+    return video?.notes || ""
   } catch (error) {
     console.error("Error fetching note:", error)
     return ""

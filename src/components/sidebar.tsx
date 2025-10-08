@@ -50,6 +50,21 @@ export function Sidebar() {
               </span>
             )}
           </Link>
+          
+          {/* Collapse Toggle Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setCollapsed(!collapsed)}
+            className="h-8 w-8 text-muted-foreground hover:text-sidebar-foreground"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </Button>
         </div>
 
         {/* Navigation */}
@@ -88,29 +103,6 @@ export function Sidebar() {
               return <div key={item.name}>{navItem}</div>
             })}
           </TooltipProvider>
-
-          {/* Collapse Toggle */}
-          <div className="pt-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setCollapsed(!collapsed)}
-              className={cn(
-                "flex w-full items-center gap-2 text-xs text-muted-foreground hover:text-sidebar-foreground",
-                collapsed && "justify-center px-0"
-              )}
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? (
-                <ChevronRight className="h-3.5 w-3.5" />
-              ) : (
-                <>
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                  <span>Collapse</span>
-                </>
-              )}
-            </Button>
-          </div>
         </nav>
       </div>
     </aside>

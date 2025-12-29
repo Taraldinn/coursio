@@ -15,95 +15,34 @@ export default async function DashboardPage() {
     redirect("/sign-in")
   }
 
-  let playlists: any[] = []
-  let totalPlaylists = 0
-  let totalVideos = 0
-  let completedVideos = 0
-  let totalWatchTime = 0
-  let activePlaylistsCount = 0
-  let weeklyWatchTime = 0
-  let weeklyCompletedVideos = 0
+  let stats = {
+    totalPlaylists: 0,
+    totalVideos: 0,
+    completedVideos: 0,
+    totalWatchTime: 0,
+    activePlaylistsCount: 0,
+    weeklyWatchTime: 0,
+    weeklyCompletedVideos: 0,
+    continueLearningPlaylists: [] as any[]
+  }
 
   try {
-    // Get all playlists with progress
-    playlists = await prisma.playlist.findMany({
-      where: {
-        userId: user.id,
-      },
-      include: {
-        videos: {
-          include: {
-            progress: {
-              where: {
-                userId: user.id,
-              },
-            },
-          },
-        },
-        category: true,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-    })
-
-    // Calculate statistics
-    totalPlaylists = playlists.length
-    
-    const allVideos = playlists.flatMap(p => p.videos)
-    totalVideos = allVideos.length
-    completedVideos = allVideos.filter(v => v.progress[0]?.completed).length
-    totalWatchTime = allVideos.reduce(
-      (sum, v) => sum + (v.progress[0]?.watchedDuration || 0),
-      0
-    )
-
-    // Active playlists (with at least one video started)
-    activePlaylistsCount = playlists.filter(p => 
-      p.videos.some((v: any) => v.progress.length > 0)
-    ).length
-
-    // Weekly stats (last 7 days)
-    const weekAgo = new Date()
-    weekAgo.setDate(weekAgo.getDate() - 7)
-    
-    const weeklyProgress = await prisma.userVideoProgress.findMany({
-      where: {
-        userId: user.id,
-        updatedAt: {
-          gte: weekAgo,
-        },
-      },
-    })
-
-    weeklyWatchTime = weeklyProgress.reduce((sum, p) => sum + p.watchedDuration, 0)
-    weeklyCompletedVideos = weeklyProgress.filter(p => p.completed).length
-
+    const { getDashboardStats } = await import("@/lib/dashboard-data")
+    stats = await getDashboardStats(user.id)
   } catch (error) {
     console.error("Database connection error:", error)
   }
 
-  // Format playlists for Continue Learning section
-  const continueLearningPlaylists = playlists
-    .map(playlist => {
-      const totalCount = playlist.videos.length
-      const completedCount = playlist.videos.filter((v: any) => v.progress[0]?.completed).length
-      const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0
-      
-      return {
-        id: playlist.id,
-        title: playlist.title,
-        description: playlist.description,
-        thumbnail: playlist.thumbnail,
-        category: playlist.category,
-        videos: playlist.videos,
-        completedCount,
-        totalCount,
-        progress,
-      }
-    })
-    .filter(p => p.progress > 0 && p.progress < 100)
-    .slice(0, 3)
+  const {
+    totalPlaylists,
+    totalVideos,
+    completedVideos,
+    totalWatchTime,
+    activePlaylistsCount,
+    weeklyWatchTime,
+    weeklyCompletedVideos,
+    continueLearningPlaylists
+  } = stats
 
   const watchTimeHours = Math.floor(totalWatchTime / 3600)
   const completionRate = totalVideos > 0 ? Math.round((completedVideos / totalVideos) * 100) : 0

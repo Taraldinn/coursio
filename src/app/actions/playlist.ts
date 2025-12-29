@@ -16,14 +16,14 @@ const playlistSchema = z.object({
 
 export async function createPlaylistFromYouTube(youtubeUrl: string) {
   const user = await currentUser()
-  
+
   if (!user?.id) {
     return { error: "Unauthorized" }
   }
 
   try {
     const playlistId = extractYouTubePlaylistId(youtubeUrl)
-    
+
     if (!playlistId) {
       return { error: "Invalid YouTube playlist URL" }
     }
@@ -44,7 +44,7 @@ export async function createPlaylistFromYouTube(youtubeUrl: string) {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '')
-    
+
     let slug = baseSlug
     let counter = 1
     while (await prisma.playlist.findFirst({ where: { slug } })) {
@@ -72,18 +72,18 @@ export async function createPlaylistFromYouTube(youtubeUrl: string) {
     })
 
     revalidatePath("/dashboard")
-    
+
     return { success: true, playlistId: playlist.id }
   } catch (error) {
     console.error("Error creating playlist:", error)
-    
-return { error: "Failed to import playlist" }
+
+    return { error: "Failed to import playlist" }
   }
 }
 
 export async function createCustomPlaylist(formData: FormData) {
   const user = await currentUser()
-  
+
   if (!user?.id) {
     return { error: "Unauthorized" }
   }
@@ -111,25 +111,31 @@ export async function createCustomPlaylist(formData: FormData) {
       createData.categoryId = validated.categoryId
     }
 
+    // Generate unique slug
+    const { generateSlug, generateShareableLink } = await import("@/lib/playlist-utils")
+    const slug = await generateSlug(validated.title)
+    createData.slug = slug
+    createData.shareableLink = generateShareableLink(slug)
+
     const playlist = await prisma.playlist.create({
       data: createData,
     })
 
     revalidatePath("/dashboard")
-    
+
     return { success: true, playlistId: playlist.id }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { error: error.issues[0].message }
     }
-    
-return { error: "Failed to create playlist" }
+
+    return { error: "Failed to create playlist" }
   }
 }
 
 export async function deletePlaylist(playlistId: string) {
   const user = await currentUser()
-  
+
   if (!user?.id) {
     return { error: "Unauthorized" }
   }
@@ -148,7 +154,7 @@ export async function deletePlaylist(playlistId: string) {
     })
 
     revalidatePath("/dashboard")
-    
+
     return { success: true }
   } catch (error) {
     return { error: "Failed to delete playlist" }
@@ -157,7 +163,7 @@ export async function deletePlaylist(playlistId: string) {
 
 export async function updatePlaylistVisibility(playlistId: string, visibility: 'PUBLIC' | 'UNLISTED' | 'PRIVATE') {
   const user = await currentUser()
-  
+
   if (!user?.id) {
     return { error: "Unauthorized" }
   }
@@ -178,7 +184,7 @@ export async function updatePlaylistVisibility(playlistId: string, visibility: '
 
     revalidatePath("/dashboard")
     revalidatePath("/")
-    
+
     return { success: true }
   } catch (error) {
     return { error: "Failed to update playlist" }

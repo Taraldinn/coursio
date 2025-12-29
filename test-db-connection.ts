@@ -1,26 +1,27 @@
 // Quick database connection test script
+import 'dotenv/config'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 async function testConnection() {
   console.log('🔍 Testing database connection...\n')
-  
+
   try {
     console.log('📡 Attempting to connect to Supabase...')
     const start = Date.now()
-    
+
     // Simple query to test connection
     await prisma.$queryRaw`SELECT 1 as result`
-    
+
     const duration = Date.now() - start
     console.log(`✅ SUCCESS! Database connected in ${duration}ms\n`)
-    
+
     // Test a real query
     console.log('🔍 Testing video table access...')
     const videoCount = await prisma.video.count()
     console.log(`✅ Found ${videoCount} videos in database\n`)
-    
+
     process.exit(0)
   } catch (error: any) {
     console.error('❌ DATABASE CONNECTION FAILED\n')
@@ -35,7 +36,7 @@ async function testConnection() {
     console.error('  → Find your project (gpllsuldiupvtvnigrlp)')
     console.error('  → Click "Resume database" or "Unpause"')
     console.error('  → Wait 30-60 seconds, then try again')
-    
+
     process.exit(1)
   } finally {
     await prisma.$disconnect()

@@ -1,6 +1,6 @@
 export async function fetchYouTubePlaylist(playlistId: string) {
   const apiKey = process.env.YOUTUBE_API_KEY
-  
+
   if (!apiKey) {
     throw new Error("YouTube API key not configured")
   }
@@ -8,15 +8,16 @@ export async function fetchYouTubePlaylist(playlistId: string) {
   try {
     // Fetch playlist details
     const playlistResponse = await fetch(
-      `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`
+      `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`,
+      { next: { revalidate: 3600 } }
     )
-    
+
     if (!playlistResponse.ok) {
       throw new Error("Failed to fetch playlist")
     }
 
     const playlistData = await playlistResponse.json()
-    
+
     if (!playlistData.items || playlistData.items.length === 0) {
       throw new Error("Playlist not found")
     }
@@ -26,13 +27,13 @@ export async function fetchYouTubePlaylist(playlistId: string) {
     // Fetch ALL playlist items (videos) with pagination
     let allVideos: any[] = []
     let nextPageToken: string | undefined = undefined
-    
+
     do {
       const url: string = nextPageToken
         ? `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=${playlistId}&pageToken=${nextPageToken}&key=${apiKey}`
         : `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=${playlistId}&key=${apiKey}`
-      
-      const videosResponse = await fetch(url)
+
+      const videosResponse = await fetch(url, { next: { revalidate: 3600 } })
 
       if (!videosResponse.ok) {
         throw new Error("Failed to fetch playlist videos")
@@ -46,11 +47,12 @@ export async function fetchYouTubePlaylist(playlistId: string) {
     // Fetch video durations in batches (max 50 IDs per request)
     const durationMap = new Map()
     const videoIds = allVideos.map((item: any) => item.contentDetails.videoId)
-    
+
     for (let i = 0; i < videoIds.length; i += 50) {
       const batch = videoIds.slice(i, i + 50).join(',')
       const durationsResponse = await fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${batch}&key=${apiKey}`
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${batch}&key=${apiKey}`,
+        { next: { revalidate: 3600 } }
       )
 
       const durationsData = await durationsResponse.json()

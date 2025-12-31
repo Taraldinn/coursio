@@ -79,10 +79,10 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="container mx-auto px-6 py-8 space-y-8">
       {/* Welcome Header */}
-      <div>
-        <h1 className="text-4xl font-bold tracking-tight mb-2">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold tracking-tight mb-2 text-foreground">
           {getGreeting()}, {user.firstName || user.fullName || "Student"}
         </h1>
         <p className="text-lg text-muted-foreground">

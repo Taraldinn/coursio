@@ -33,8 +33,8 @@ export function ContinueLearningCard({ playlist }: ContinueLearningCardProps) {
           <div className="flex gap-4">
             {/* Icon */}
             <div className="flex-shrink-0">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Sparkles className="h-6 w-6 text-primary" />
+              <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <Sparkles className="h-6 w-6 text-blue-500" />
               </div>
             </div>
 

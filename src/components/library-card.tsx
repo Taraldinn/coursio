@@ -39,18 +39,17 @@ export function LibraryCard({ playlist }: LibraryCardProps) {
   const totalDuration = playlist.videos.reduce((sum, v) => sum + (v.duration || 0), 0)
   const firstVideo = playlist.videos[0]
 
-  // Icon colors based on category or default
+  // Icon colors based on category or default - matching the design
   const iconColors = [
     "bg-blue-500/10 text-blue-500",
+    "bg-blue-600/10 text-blue-600",
+    "bg-black/10 text-black dark:bg-white/10 dark:text-white",
     "bg-orange-500/10 text-orange-500",
     "bg-green-500/10 text-green-500",
     "bg-purple-500/10 text-purple-500",
-    "bg-pink-500/10 text-pink-500",
-    "bg-cyan-500/10 text-cyan-500"
+    "bg-teal-500/10 text-teal-500"
   ]
-  const iconColor = playlist.category?.color 
-    ? `bg-[${playlist.category.color}]/10 text-[${playlist.category.color}]`
-    : iconColors[playlist.id.charCodeAt(0) % iconColors.length]
+  const iconColor = iconColors[playlist.id.charCodeAt(0) % iconColors.length]
 
   return (
     <Link href={`/dashboard/playlists/${playlist.id}`}>
@@ -62,11 +61,6 @@ export function LibraryCard({ playlist }: LibraryCardProps) {
               <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${iconColor}`}>
                 <Sparkles className="h-6 w-6" />
               </div>
-              {playlist.category && (
-                <Badge variant="outline" className="text-xs">
-                  {playlist.category.name}
-                </Badge>
-              )}
             </div>
 
             {/* Title and Description */}

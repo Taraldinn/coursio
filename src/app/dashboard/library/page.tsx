@@ -30,9 +30,9 @@ export default async function LibraryPage() {
   })
 
   return (
-    <div className="space-y-8">
+    <div className="container mx-auto px-6 py-8 space-y-8">
       <div>
-        <h1 className="text-4xl font-bold tracking-tight mb-2">My Library</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-2 text-foreground">My Library</h1>
         <p className="text-lg text-muted-foreground">
           Access your enrolled courses. Track your progress and continue learning.
         </p>

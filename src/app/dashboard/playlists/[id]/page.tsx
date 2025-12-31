@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { PlaySquare, Clock, CheckCircle2, ArrowLeft } from "lucide-react"
 import { PlaylistSync } from "@/components/playlist-sync"
+import { cn } from "@/lib/utils"
 
 interface PlaylistPageProps {
   params: Promise<{
@@ -140,43 +142,50 @@ return `${mins}m`
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-1">
-            {playlist.videos.map((video: any, index: number) => {
-              const isCompleted = video.progress[0]?.completed || false
-              
-return (
-                <Button
-                  key={video.id}
-                  variant="ghost"
-                  className="h-auto w-full justify-start gap-3 p-3 text-left hover:bg-muted/50"
-                  asChild
-                >
-                  <Link href={`/dashboard/playlists/${id}/video/${video.id}`}>
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border bg-background">
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                      ) : (
-                        <span className="text-xs font-medium">{index + 1}</span>
-                      )}
-                    </div>
-                    <div className="flex-1 space-y-0.5">
-                      <div className="font-medium text-sm">{video.title}</div>
-                      {video.description && (
-                        <div className="line-clamp-1 text-xs text-muted-foreground">
-                          {video.description}
+          <ScrollArea className="h-full max-h-[600px]">
+            <div className="space-y-1.5 pr-4">
+              {playlist.videos.map((video: any, index: number) => {
+                const isCompleted = video.progress[0]?.completed || false
+                
+                return (
+                  <Button
+                    key={video.id}
+                    variant="ghost"
+                    className="h-auto w-full justify-start gap-3 p-3 text-left hover:bg-muted/50 rounded-lg transition-all"
+                    asChild
+                  >
+                    <Link href={`/dashboard/playlists/${id}/video/${video.id}`}>
+                      <div className={cn(
+                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                        isCompleted
+                          ? "border-green-500/50 bg-green-500/10"
+                          : "border-muted-foreground/30 bg-background"
+                      )}>
+                        {isCompleted ? (
+                          <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                        ) : (
+                          <span className="text-xs font-medium text-muted-foreground">{index + 1}</span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="font-medium text-sm leading-snug line-clamp-2">{video.title}</div>
+                        {video.description && (
+                          <div className="line-clamp-1 text-xs text-muted-foreground">
+                            {video.description}
+                          </div>
+                        )}
+                      </div>
+                      {video.duration && (
+                        <div className="text-sm text-muted-foreground shrink-0">
+                          {formatDuration(video.duration)}
                         </div>
                       )}
-                    </div>
-                    {video.duration && (
-                      <div className="text-sm text-muted-foreground">
-                        {formatDuration(video.duration)}
-                      </div>
-                    )}
-                  </Link>
-                </Button>
-              )
-            })}
-          </div>
+                    </Link>
+                  </Button>
+                )
+              })}
+            </div>
+          </ScrollArea>
         </CardContent>
       </Card>
     </div>

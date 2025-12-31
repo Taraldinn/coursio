@@ -44,8 +44,8 @@ return `${mins}:${secs.toString().padStart(2, "0")}`
   }
 
   return (
-    <ScrollArea className="h-[600px]">
-      <div className="space-y-1">
+    <ScrollArea className="h-full max-h-[600px]">
+      <div className="space-y-1.5 p-2">
         {videos.map((video, index) => {
           const isActive = video.id === currentVideoId
           const isCompleted = progressMap[video.id] || false
@@ -55,23 +55,34 @@ return `${mins}:${secs.toString().padStart(2, "0")}`
               key={video.id}
               variant={isActive ? "secondary" : "ghost"}
               className={cn(
-                "w-full justify-start gap-3 text-left",
-                isActive && "bg-secondary"
+                "w-full justify-start gap-3 text-left h-auto p-3 rounded-lg transition-all",
+                isActive && "bg-primary/10 border border-primary/20 shadow-sm",
+                !isActive && "hover:bg-muted/50"
               )}
               asChild
             >
               <Link href={`/dashboard/playlists/${playlistId}/video/${video.id}`}>
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs">
+                <div className={cn(
+                  "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                  isActive 
+                    ? "border-primary bg-primary/10" 
+                    : isCompleted
+                    ? "border-green-500/50 bg-green-500/10"
+                    : "border-muted-foreground/30"
+                )}>
                   {isCompleted ? (
-                    <Check className="h-3 w-3" />
+                    <Check className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
                   ) : isActive ? (
-                    <Play className="h-3 w-3" />
+                    <Play className="h-3.5 w-3.5 text-primary" />
                   ) : (
-                    index + 1
+                    <span className="text-xs font-medium text-muted-foreground">{index + 1}</span>
                   )}
                 </div>
-                <div className="flex-1 space-y-1">
-                  <div className="line-clamp-2 text-sm font-medium">
+                <div className="flex-1 min-w-0 space-y-1">
+                  <div className={cn(
+                    "line-clamp-2 text-sm leading-snug",
+                    isActive ? "font-semibold" : "font-medium"
+                  )}>
                     {video.title}
                   </div>
                   {video.duration && (

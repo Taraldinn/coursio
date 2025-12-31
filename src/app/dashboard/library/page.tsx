@@ -5,6 +5,7 @@ import { LibraryCard } from "@/components/library-card"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
 import Link from "next/link"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 export default async function LibraryPage() {
   const user = await currentUser()
@@ -32,71 +33,71 @@ export default async function LibraryPage() {
   return (
     <div className="container mx-auto px-6 py-8 space-y-8">
       <div>
-        <h1 className="text-4xl font-bold tracking-tight mb-2 text-foreground">My Library</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-3xl font-bold tracking-tight mb-2 text-foreground">My Library</h1>
+        <p className="text-muted-foreground">
           Access your enrolled courses. Track your progress and continue learning.
         </p>
       </div>
 
-      <div className="flex items-center gap-2 border-b">
-        <Button variant="ghost" className="rounded-b-none border-b-2 border-primary">
-          Courses
-        </Button>
-        <Button variant="ghost" className="rounded-b-none">
-          Bookmarks
-        </Button>
-      </div>
+      <Tabs defaultValue="courses" className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <TabsList className="bg-muted/50 p-1">
+            <TabsTrigger value="courses" className="px-6 data-[state=active]:bg-background">Courses</TabsTrigger>
+            <TabsTrigger value="bookmarks" className="px-6 data-[state=active]:bg-background">Bookmarks</TabsTrigger>
+          </TabsList>
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {playlists.length} {playlists.length === 1 ? 'course' : 'courses'} in your library
-        </p>
-        <div className="flex gap-2">
-          <Button variant="outline" asChild>
-            <Link href="/dashboard/playlists/new">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Playlist
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/dashboard/playlists/new?type=custom">
-              Create Custom Playlist
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {playlists.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-            <PlusCircle className="h-6 w-6 text-primary" />
-          </div>
-          <h3 className="mt-4 text-lg font-semibold">No courses yet</h3>
-          <p className="mb-4 mt-2 text-sm text-muted-foreground">
-            Get started by adding your first playlist
-          </p>
-          <div className="flex gap-3">
-            <Button asChild>
-              <Link href="/dashboard/playlists/new">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Playlist
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/dashboard/playlists/new?type=custom">
-                Create Custom Playlist
-              </Link>
-            </Button>
+          <div className="flex gap-2">
+            <span className="text-sm text-muted-foreground self-center mr-2">
+              {playlists.length} {playlists.length === 1 ? 'course' : 'courses'} in library
+            </span>
           </div>
         </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {playlists.map((playlist) => (
-            <LibraryCard key={playlist.id} playlist={playlist} />
-          ))}
-        </div>
-      )}
+
+        <TabsContent value="courses" className="space-y-8">
+          {playlists.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center bg-card/50">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
+                <PlusCircle className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold">No courses yet</h3>
+              <p className="mb-6 mt-2 text-muted-foreground max-w-sm">
+                Get started by adding your first playlist. You can import from YouTube or create your own custom playlist.
+              </p>
+              <div className="flex gap-3">
+                <Button asChild size="lg">
+                  <Link href="/dashboard/playlists/new">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Playlist
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link href="/dashboard/playlists/new?type=custom">
+                    Create Custom Playlist
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {playlists.map((playlist) => (
+                <LibraryCard key={playlist.id} playlist={playlist} />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="bookmarks">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center bg-card/50 min-h-[300px]">
+            <h3 className="text-lg font-semibold">No bookmarks yet</h3>
+            <p className="text-muted-foreground mt-2">
+              Courses you bookmark from the Explore page will appear here.
+            </p>
+            <Button variant="outline" className="mt-4" asChild>
+              <Link href="/dashboard/explore">Explore Courses</Link>
+            </Button>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
-

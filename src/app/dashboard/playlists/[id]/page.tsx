@@ -141,9 +141,10 @@ return `${mins}m`
             {completedVideos} of {totalVideos} videos completed
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-full max-h-[600px]">
-            <div className="space-y-1.5 pr-4">
+        <CardContent className="overflow-hidden">
+          <div className="h-[600px]">
+            <ScrollArea className="h-full">
+              <div className="space-y-1.5 pr-4">
               {playlist.videos.map((video: any, index: number) => {
                 const isCompleted = video.progress[0]?.completed || false
                 
@@ -184,8 +185,9 @@ return `${mins}m`
                   </Button>
                 )
               })}
-            </div>
-          </ScrollArea>
+              </div>
+            </ScrollArea>
+          </div>
         </CardContent>
       </Card>
     </div>

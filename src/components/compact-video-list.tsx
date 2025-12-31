@@ -63,7 +63,7 @@ export function CompactVideoList({
   }, [isOpen, currentVideoId, currentIndex])
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <Button 
@@ -84,9 +84,10 @@ export function CompactVideoList({
           </Button>
         </CollapsibleTrigger>
         
-        <CollapsibleContent className="flex-1 min-h-0">
-          <ScrollArea className="h-full max-h-[600px]">
-            <div ref={containerRef} className="space-y-1 p-2">
+        <CollapsibleContent className="overflow-hidden">
+          <div className="h-[500px]">
+            <ScrollArea className="h-full">
+              <div ref={containerRef} className="space-y-1 p-2">
               {videos.map((video: any, index: number) => {
                 const isCompleted = video.progress?.[0]?.completed || false
                 const isCurrent = video.id === currentVideoId
@@ -143,8 +144,9 @@ export function CompactVideoList({
                   </Link>
                 )
               })}
-            </div>
-          </ScrollArea>
+              </div>
+            </ScrollArea>
+          </div>
         </CollapsibleContent>
       </Collapsible>
     </div>

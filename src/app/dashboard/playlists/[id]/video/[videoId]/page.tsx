@@ -134,7 +134,7 @@ export default async function VideoPage({ params }: VideoPageProps) {
           />
 
           {/* Compact Playlist Dropdown */}
-          <div className="rounded-lg border bg-card shadow-sm">
+          <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
             <CompactVideoList
               videos={video.playlist.videos}
               currentVideoId={video.id}

@@ -216,8 +216,9 @@ export default function PlaylistPage() {
         {/* Videos List */}
         <div className="space-y-3">
           <h2 className="text-2xl font-bold">Videos</h2>
-          <ScrollArea className="h-full max-h-[800px]">
-            <div className="space-y-2 pr-4">
+          <div className="h-[800px]">
+            <ScrollArea className="h-full">
+              <div className="space-y-2 pr-4">
               {playlist.videos.map((video: any, index: number) => (
                 <Link
                   key={video.id}
@@ -300,8 +301,9 @@ export default function PlaylistPage() {
                   </div>
                 </Link>
               ))}
-            </div>
-          </ScrollArea>
+              </div>
+            </ScrollArea>
+          </div>
         </div>
       </div>
 

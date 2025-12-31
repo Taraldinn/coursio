@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Save, Loader2, FileText } from "lucide-react"
+import { Save, Loader2, FileText, Command } from "lucide-react"
 import { toast } from "sonner"
-// optional: import ReactMarkdown if we want previews, but simple text area is fine for now
 
 interface NotesPanelProps {
     videoId: string
@@ -48,36 +47,20 @@ export function NotesPanel({ videoId, initialNotes = "" }: NotesPanelProps) {
     }
 
     return (
-        <div className="flex h-full flex-col gap-4 rounded-lg border bg-card p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 font-semibold">
-                    <FileText className="h-5 w-5" />
-                    <h3>Notes</h3>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    {isSaving ? (
-                        <span className="flex items-center gap-1">
-                            <Loader2 className="h-3 w-3 animate-spin" />
-                            Saving...
-                        </span>
-                    ) : lastSaved ? (
-                        <span>Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                    ) : null}
-                </div>
-            </div>
+        <div className="flex h-full flex-col bg-[#0A0A0A]">
+            <div className="flex-1 relative">
+                <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="Enter text or type '/' for commands"
+                    className="w-full h-full resize-none bg-transparent p-4 text-sm font-mono text-white/80 placeholder:text-white/20 focus:outline-none focus:ring-0 leading-relaxed border-0"
+                    spellCheck={false}
+                />
 
-            <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Type your notes here... (Markdown supported)"
-                className="flex-1 resize-none font-mono text-sm leading-relaxed"
-            />
-
-            <div className="flex justify-end">
-                <Button size="sm" onClick={handleSave} disabled={isSaving}>
-                    <Save className="mr-2 h-4 w-4" />
-                    Save Notes
-                </Button>
+                {/* Status Indicator Bottom Right */}
+                <div className="absolute bottom-4 right-4 text-[10px] text-white/30 flex items-center gap-2 pointer-events-none">
+                    {isSaving ? "Saving..." : lastSaved ? "Saved" : ""}
+                </div>
             </div>
         </div>
     )

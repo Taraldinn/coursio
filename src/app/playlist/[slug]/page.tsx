@@ -218,15 +218,15 @@ export default function PlaylistPage() {
           <h2 className="text-2xl font-bold">Videos</h2>
           <div className="h-[800px]">
             <ScrollArea className="h-full">
-              <div className="space-y-2 pr-4">
+              <div className="space-y-2 p-4">
               {playlist.videos.map((video: any, index: number) => (
                 <Link
                   key={video.id}
                   href={`/playlist/${slug}/watch?video=${video.id}`}
-                  className="block"
+                  className="block overflow-hidden"
                 >
-                  <div className="border rounded-lg p-4 hover:bg-muted/50 transition-all duration-200 hover:shadow-sm">
-                    <div className="flex gap-4">
+                  <div className="border rounded-lg p-4 hover:bg-muted/50 transition-all duration-200 hover:shadow-sm overflow-hidden">
+                    <div className="flex gap-4 w-full min-w-0">
                       {/* Number/Status */}
                       <div className={cn(
                         "flex items-center justify-center w-8 h-8 rounded-full border-2 transition-colors shrink-0",
@@ -257,28 +257,28 @@ export default function PlaylistPage() {
                       </div>
 
                       {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium line-clamp-1 text-sm">{video.title}</h3>
+                      <div className="flex-1 min-w-0 overflow-hidden">
+                        <h3 className="font-medium line-clamp-1 text-sm break-words">{video.title}</h3>
                         {video.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1 break-words">
                             {video.description}
                           </p>
                         )}
                         <div className="flex flex-wrap gap-3 mt-2 text-xs text-muted-foreground">
                           {video.duration && (
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {formatDuration(video.duration)}
+                            <span className="flex items-center gap-1 shrink-0">
+                              <Clock className="h-3 w-3 shrink-0" />
+                              <span className="truncate">{formatDuration(video.duration)}</span>
                             </span>
                           )}
                           {video.dueDate && (
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              Due {new Date(video.dueDate).toLocaleDateString()}
+                            <span className="flex items-center gap-1 shrink-0">
+                              <Calendar className="h-3 w-3 shrink-0" />
+                              <span className="truncate">Due {new Date(video.dueDate).toLocaleDateString()}</span>
                             </span>
                           )}
                           {video.provider && video.provider !== 'YOUTUBE' && (
-                            <Badge variant="outline" className="h-5 text-xs">
+                            <Badge variant="outline" className="h-5 text-xs shrink-0">
                               {video.provider}
                             </Badge>
                           )}
@@ -287,16 +287,16 @@ export default function PlaylistPage() {
 
                       {/* Progress */}
                       {video.progress?.[0] && (
-                        <div className="flex items-center shrink-0">
+                        <div className="flex items-center shrink-0 ml-2">
                           {video.progress[0].progressPercent > 0 && (
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-sm text-muted-foreground whitespace-nowrap">
                               {video.progress[0].progressPercent}%
                             </div>
                           )}
                         </div>
                       )}
 
-                      <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+                      <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 ml-2" />
                     </div>
                   </div>
                 </Link>

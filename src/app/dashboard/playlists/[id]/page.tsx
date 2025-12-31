@@ -67,7 +67,7 @@ return `${mins}m`
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-hidden">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
@@ -141,10 +141,10 @@ return `${mins}m`
             {completedVideos} of {totalVideos} videos completed
           </CardDescription>
         </CardHeader>
-        <CardContent className="overflow-hidden">
+        <CardContent className="overflow-hidden p-0">
           <div className="h-[600px]">
             <ScrollArea className="h-full">
-              <div className="space-y-1.5 pr-4">
+              <div className="space-y-1.5 p-4">
               {playlist.videos.map((video: any, index: number) => {
                 const isCompleted = video.progress[0]?.completed || false
                 
@@ -152,10 +152,10 @@ return `${mins}m`
                   <Button
                     key={video.id}
                     variant="ghost"
-                    className="h-auto w-full justify-start gap-3 p-3 text-left hover:bg-muted/50 rounded-lg transition-all"
+                    className="h-auto w-full justify-start gap-3 p-3 text-left hover:bg-muted/50 rounded-lg transition-all overflow-hidden"
                     asChild
                   >
-                    <Link href={`/dashboard/playlists/${id}/video/${video.id}`}>
+                    <Link href={`/dashboard/playlists/${id}/video/${video.id}`} className="flex items-start gap-3 w-full min-w-0">
                       <div className={cn(
                         "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
                         isCompleted
@@ -168,16 +168,16 @@ return `${mins}m`
                           <span className="text-xs font-medium text-muted-foreground">{index + 1}</span>
                         )}
                       </div>
-                      <div className="flex-1 min-w-0 space-y-1">
-                        <div className="font-medium text-sm leading-snug line-clamp-2">{video.title}</div>
+                      <div className="flex-1 min-w-0 space-y-1 overflow-hidden">
+                        <div className="font-medium text-sm leading-snug line-clamp-2 break-words">{video.title}</div>
                         {video.description && (
-                          <div className="line-clamp-1 text-xs text-muted-foreground">
+                          <div className="line-clamp-1 text-xs text-muted-foreground break-words">
                             {video.description}
                           </div>
                         )}
                       </div>
                       {video.duration && (
-                        <div className="text-sm text-muted-foreground shrink-0">
+                        <div className="text-sm text-muted-foreground shrink-0 ml-2">
                           {formatDuration(video.duration)}
                         </div>
                       )}

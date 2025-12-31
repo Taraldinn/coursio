@@ -98,13 +98,13 @@ export function CompactVideoList({
                     data-video-id={video.id}
                     href={`/dashboard/playlists/${playlistId}/video/${video.id}`}
                     className={cn(
-                      "block rounded-lg transition-all duration-200",
+                      "block rounded-lg transition-all duration-200 overflow-hidden",
                       isCurrent 
                         ? "bg-primary/10 border border-primary/20 shadow-sm" 
                         : "hover:bg-muted/50 border border-transparent"
                     )}
                   >
-                    <div className="flex items-start gap-3 p-2.5">
+                    <div className="flex items-start gap-3 p-2.5 w-full min-w-0">
                       <div className={cn(
                         "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
                         isCurrent 
@@ -122,9 +122,9 @@ export function CompactVideoList({
                         )}
                       </div>
                       
-                      <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex-1 min-w-0 space-y-1 overflow-hidden">
                         <p className={cn(
-                          "text-xs leading-snug line-clamp-2 transition-colors",
+                          "text-xs leading-snug line-clamp-2 transition-colors break-words",
                           isCurrent 
                             ? "font-semibold text-foreground" 
                             : "font-medium",
@@ -136,7 +136,7 @@ export function CompactVideoList({
                         {video.duration && (
                           <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                             <Clock className="h-3 w-3 shrink-0" />
-                            <span>{formatDuration(video.duration)}</span>
+                            <span className="truncate">{formatDuration(video.duration)}</span>
                           </div>
                         )}
                       </div>

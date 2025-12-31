@@ -16,11 +16,11 @@ export function DashboardContent({ children }: DashboardContentProps) {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className={cn(
-        "flex-1 transition-all duration-300",
+        "flex-1 transition-all duration-300 overflow-x-hidden",
         collapsed ? "pl-16" : "pl-56"
       )}>
         <Header />
-        <main className="p-4">
+        <main className="p-4 overflow-x-hidden max-w-full">
           {children}
         </main>
       </div>

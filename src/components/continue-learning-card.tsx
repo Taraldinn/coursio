@@ -3,15 +3,16 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronRight } from "lucide-react"
+import { Sparkles, Play } from "lucide-react"
 
 interface ContinueLearningCardProps {
   playlist: {
     id: string
     title: string
-    description: string
+    description: string | null
     thumbnail: string | null
     category?: { name: string } | null
     videos: any[]
@@ -22,56 +23,45 @@ interface ContinueLearningCardProps {
 }
 
 export function ContinueLearningCard({ playlist }: ContinueLearningCardProps) {
+  const firstVideo = playlist.videos[0]
+  const firstVideoTitle = firstVideo?.title || ""
+
   return (
     <Link href={`/dashboard/playlists/${playlist.id}`}>
-      <Card className="group overflow-hidden transition-all hover:shadow-lg hover:border-primary/50">
-        <CardContent className="p-0">
-          <div className="flex gap-4 p-4">
-            {/* Thumbnail */}
-            <div className="relative h-20 w-28 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-              {playlist.thumbnail ? (
-                <Image
-                  src={playlist.thumbnail}
-                  alt={playlist.title}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
-                  No image
-                </div>
-              )}
+      <Card className="group h-full transition-all hover:shadow-lg hover:border-primary/50">
+        <CardContent className="p-6">
+          <div className="flex gap-4">
+            {/* Icon */}
+            <div className="flex-shrink-0">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Sparkles className="h-6 w-6 text-primary" />
+              </div>
             </div>
 
             {/* Content */}
-            <div className="flex flex-1 flex-col justify-between">
+            <div className="flex-1 min-w-0 space-y-3">
               <div className="space-y-1">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold leading-tight line-clamp-1 group-hover:text-primary transition-colors">
-                    {playlist.title}
-                  </h3>
-                  {playlist.category && (
-                    <Badge variant="secondary" className="flex-shrink-0 text-xs">
-                      {playlist.category.name}
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground line-clamp-1">
-                  {playlist.description || "No description"}
+                <h3 className="font-semibold text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                  {playlist.title}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-1">
+                  {firstVideoTitle || playlist.description || "No description"}
                 </p>
               </div>
 
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">
-                      {playlist.completedCount} of {playlist.totalCount} videos
-                    </span>
-                    <span className="font-medium">{playlist.progress}%</span>
-                  </div>
-                  <Progress value={playlist.progress} className="h-1.5" />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">
+                    {playlist.progress}% complete
+                  </span>
                 </div>
+                <Progress value={playlist.progress} className="h-2" />
               </div>
+
+              <Button className="w-full" size="sm">
+                <Play className="mr-2 h-4 w-4" />
+                Start Learning
+              </Button>
             </div>
           </div>
         </CardContent>

@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 export async function sendVerificationEmail(email: string, username: string, verificationUrl: string) {
   const mailOptions = {
-    from: `"Coursio" <${process.env.EMAIL_FROM}>`,
+    from: `"coursioo" <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: "Verify your email address",
     html: `
@@ -31,7 +31,7 @@ export async function sendVerificationEmail(email: string, username: string, ver
                   <!-- Header -->
                   <tr>
                     <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-                      <h1 style="color: #ffffff; margin: 0; font-size: 28px;">Coursio</h1>
+                      <h1 style="color: #ffffff; margin: 0; font-size: 28px;">coursioo</h1>
                       <p style="color: #ffffff; margin: 10px 0 0 0; opacity: 0.9;">Welcome to Your Learning Journey</p>
                     </td>
                   </tr>
@@ -41,7 +41,7 @@ export async function sendVerificationEmail(email: string, username: string, ver
                     <td style="padding: 40px 30px;">
                       <h2 style="color: #333333; margin: 0 0 20px 0; font-size: 24px;">Hi ${username}! 👋</h2>
                       <p style="color: #666666; line-height: 1.6; margin: 0 0 20px 0; font-size: 16px;">
-                        Thank you for signing up for Coursio! We're excited to have you on board.
+                        Thank you for signing up for coursioo! We're excited to have you on board.
                       </p>
                       <p style="color: #666666; line-height: 1.6; margin: 0 0 30px 0; font-size: 16px;">
                         Please verify your email address by clicking the button below:
@@ -76,7 +76,7 @@ export async function sendVerificationEmail(email: string, username: string, ver
                         If you didn't create an account, you can safely ignore this email.
                       </p>
                       <p style="color: #999999; margin: 0; font-size: 12px;">
-                        © 2025 Coursio. All rights reserved.
+                        © 2025 coursioo. All rights reserved.
                       </p>
                     </td>
                   </tr>
@@ -101,7 +101,7 @@ return { success: true }
 
 export async function sendPasswordResetEmail(email: string, username: string, resetUrl: string) {
   const mailOptions = {
-    from: `"Coursio" <${process.env.EMAIL_FROM}>`,
+    from: `"coursioo" <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: "Reset your password",
     html: `
@@ -121,7 +121,7 @@ export async function sendPasswordResetEmail(email: string, username: string, re
                   <tr>
                     <td style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 40px 30px; text-align: center;">
                       <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🔐 Password Reset</h1>
-                      <p style="color: #ffffff; margin: 10px 0 0 0; opacity: 0.9;">Coursio Account Security</p>
+                      <p style="color: #ffffff; margin: 10px 0 0 0; opacity: 0.9;">coursioo Account Security</p>
                     </td>
                   </tr>
                   
@@ -130,7 +130,7 @@ export async function sendPasswordResetEmail(email: string, username: string, re
                     <td style="padding: 40px 30px;">
                       <h2 style="color: #333333; margin: 0 0 20px 0; font-size: 24px;">Hi ${username},</h2>
                       <p style="color: #666666; line-height: 1.6; margin: 0 0 20px 0; font-size: 16px;">
-                        We received a request to reset your password for your Coursio account.
+                        We received a request to reset your password for your coursioo account.
                       </p>
                       <p style="color: #666666; line-height: 1.6; margin: 0 0 30px 0; font-size: 16px;">
                         Click the button below to create a new password:
@@ -174,10 +174,10 @@ export async function sendPasswordResetEmail(email: string, username: string, re
                   <tr>
                     <td style="background-color: #f9f9f9; padding: 30px; text-align: center; border-top: 1px solid #eeeeee;">
                       <p style="color: #999999; margin: 0 0 10px 0; font-size: 14px;">
-                        Need help? Contact us at support@coursio.com
+                        Need help? Contact us at support@coursioo.com
                       </p>
                       <p style="color: #999999; margin: 0; font-size: 12px;">
-                        © 2025 Coursio. All rights reserved.
+                        © 2025 coursioo. All rights reserved.
                       </p>
                     </td>
                   </tr>
@@ -202,16 +202,16 @@ return { success: true }
 
 export async function sendWelcomeEmail(email: string, username: string) {
   const mailOptions = {
-    from: `"Coursio" <${process.env.EMAIL_FROM}>`,
+    from: `"coursioo" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: "Welcome to Coursio! 🎉",
+    subject: "Welcome to coursioo! 🎉",
     html: `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Welcome to Coursio</title>
+          <title>Welcome to coursioo</title>
         </head>
         <body style="margin: 0; padding: 0; font-family: 'Arial', sans-serif; background-color: #f4f4f4;">
           <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
@@ -220,7 +220,7 @@ export async function sendWelcomeEmail(email: string, username: string) {
                 <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                   <tr>
                     <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-                      <h1 style="color: #ffffff; margin: 0; font-size: 32px;">🎉 Welcome to Coursio!</h1>
+                      <h1 style="color: #ffffff; margin: 0; font-size: 32px;">🎉 Welcome to coursioo!</h1>
                     </td>
                   </tr>
                   <tr>
@@ -230,7 +230,7 @@ export async function sendWelcomeEmail(email: string, username: string) {
                         Your account has been verified successfully! You're all set to start your learning journey.
                       </p>
                       <p style="color: #666666; line-height: 1.6; margin: 0 0 30px 0; font-size: 16px;">
-                        Here's what you can do with Coursio:
+                        Here's what you can do with coursioo:
                       </p>
                       <ul style="color: #666666; line-height: 1.8; margin: 0 0 30px 0; font-size: 15px;">
                         <li>📺 Import YouTube playlists as courses</li>
@@ -253,7 +253,7 @@ export async function sendWelcomeEmail(email: string, username: string) {
                   <tr>
                     <td style="background-color: #f9f9f9; padding: 30px; text-align: center; border-top: 1px solid #eeeeee;">
                       <p style="color: #999999; margin: 0; font-size: 12px;">
-                        © 2025 Coursio. All rights reserved.
+                        © 2025 coursioo. All rights reserved.
                       </p>
                     </td>
                   </tr>

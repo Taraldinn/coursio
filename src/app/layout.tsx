@@ -19,7 +19,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-    title: 'Coursio - Track Your Learning Journey',
+    title: 'coursioo - Track Your Learning Journey',
     description: 'Transform YouTube playlists into structured courses. Track your progress, take notes, and never lose your place. All for free.',
     generator: 'v0.app'
 };

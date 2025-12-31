@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { PlayCircle, Youtube, Edit3, TrendingUp, Users, Sparkles, ArrowRight, Check, Github, Zap } from "lucide-react"
+import { Logo } from "@/components/logo"
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -89,10 +90,7 @@ export default function HomePage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2">
-            <PlayCircle className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">Coursio</span>
-          </div>
+          <Logo size="md" showText={true} />
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
               <Link href="/sign-in">Sign In</Link>
@@ -230,11 +228,11 @@ export default function HomePage() {
               transition={{ duration: 0.5 }}
             >
               <Badge variant="outline" className="mb-4">
-                Why Coursio
+                Why coursioo
               </Badge>
               <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Your Personal Learning Platform</h2>
               <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-                Stop juggling multiple tabs and losing track of your learning progress. Coursio gives you a centralized
+                Stop juggling multiple tabs and losing track of your learning progress. coursioo gives you a centralized
                 dashboard to manage all your educational content.
               </p>
 
@@ -301,7 +299,7 @@ export default function HomePage() {
             <CardContent className="relative px-6 py-10 text-center sm:px-10 sm:py-12">
               <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">Ready to Start Learning?</h2>
               <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
-                Join thousands of learners who are already tracking their progress with Coursio. Get started in less
+                Join thousands of learners who are already tracking their progress with coursioo. Get started in less
                 than a minute.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-4">
@@ -327,7 +325,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2">
                 <PlayCircle className="h-5 w-5 text-primary" />
-                <span className="font-bold">Coursio</span>
+                <Logo size="sm" showText={true} />
               </div>
               <p className="mt-3 text-sm text-muted-foreground">
                 Transform YouTube playlists into structured learning experiences.
@@ -403,7 +401,7 @@ export default function HomePage() {
 
           <div className="mt-8 border-t pt-6 text-center text-xs text-muted-foreground sm:text-sm">
             <p>Built with ❤️ using Next.js 15, shadcn/ui, and Tailwind CSS v4</p>
-            <p className="mt-2">© 2025 Coursio. All rights reserved.</p>
+            <p className="mt-2">© 2025 coursioo. All rights reserved.</p>
           </div>
         </div>
       </footer>

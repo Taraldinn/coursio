@@ -27,6 +27,7 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { Logo } from "@/components/logo"
 
 export function Header() {
   const { user } = useUser()
@@ -46,13 +47,8 @@ export function Header() {
         {/* Left: Logo and Navigation */}
         <div className="flex items-center gap-8">
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
-              <span className="text-xl font-bold text-foreground">STACK LEARNER</span>
-            </div>
+          <Link href="/dashboard">
+            <Logo size="md" showText={true} />
           </Link>
 
           {/* Navigation Links */}

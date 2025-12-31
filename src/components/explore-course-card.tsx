@@ -50,7 +50,7 @@ export function ExploreCourseCard({ playlist, userId }: ExploreCourseCardProps) 
     <Link href={`/playlist/${playlist.slug || playlist.id}`}>
       <Card className="group transition-all hover:shadow-lg hover:border-primary/50">
         <CardContent className="p-4">
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-start">
             {/* Thumbnail */}
             <div className="relative w-32 h-20 flex-shrink-0 rounded overflow-hidden bg-muted">
               {imageUrl ? (
@@ -72,16 +72,28 @@ export function ExploreCourseCard({ playlist, userId }: ExploreCourseCardProps) 
               {/* Header with badges */}
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  {isPremium && (
-                    <Badge className="bg-primary text-primary-foreground text-xs">PREMIUM</Badge>
-                  )}
-                  {!isPremium && (
-                    <Badge variant="outline" className="text-xs">FREE</Badge>
+                  {isPremium ? (
+                    <Badge className="bg-primary text-primary-foreground text-xs font-medium">PREMIUM</Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-xs font-medium">FREE</Badge>
                   )}
                   {isNew && (
-                    <Badge variant="secondary" className="text-xs">NEW</Badge>
+                    <Badge variant="secondary" className="text-xs font-medium">NEW</Badge>
                   )}
                 </div>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="shrink-0"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    // Handle quick view - could open a modal or navigate
+                    window.location.href = `/playlist/${playlist.slug || playlist.id}`
+                  }}
+                >
+                  Quick View
+                </Button>
               </div>
 
               {/* Title */}
@@ -105,12 +117,12 @@ export function ExploreCourseCard({ playlist, userId }: ExploreCourseCardProps) 
               )}
 
               {/* Meta Info */}
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                 {playlist.difficulty && (
                   <Badge
                     variant="outline"
                     className={cn(
-                      "text-xs",
+                      "text-xs font-medium",
                       difficultyColors[playlist.difficulty as keyof typeof difficultyColors]
                     )}
                   >
@@ -122,13 +134,6 @@ export function ExploreCourseCard({ playlist, userId }: ExploreCourseCardProps) 
                   <span>{formatDuration(totalDuration)}</span>
                 </div>
                 <span>{playlist._count.videos} {playlist._count.videos === 1 ? "video" : "videos"}</span>
-              </div>
-
-              {/* Action Button */}
-              <div className="flex justify-end pt-2">
-                <Button size="sm" variant="outline">
-                  Quick View
-                </Button>
               </div>
             </div>
           </div>

@@ -67,7 +67,8 @@ return `${mins}m`
   }
 
   return (
-    <div className="space-y-4 overflow-x-hidden">
+    <div className="container mx-auto px-6 py-8 space-y-6">
+      {/* Header with Back and Title */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
@@ -76,17 +77,7 @@ return `${mins}m`
               Back
             </Link>
           </Button>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold">{playlist.title}</h1>
-              {playlist.category && (
-                <Badge variant="secondary" className="text-xs">{playlist.category.name}</Badge>
-              )}
-            </div>
-            {playlist.description && (
-              <p className="text-sm text-muted-foreground mt-1">{playlist.description}</p>
-            )}
-          </div>
+          <h1 className="text-2xl font-bold">{playlist.title}</h1>
         </div>
         
         {playlist.youtubePlaylistId && (
@@ -99,7 +90,8 @@ return `${mins}m`
         )}
       </div>
 
-      <div className="grid gap-3 md:grid-cols-3">
+      {/* Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-3">
         <Card className="border-none shadow-none bg-muted/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Videos</CardTitle>
@@ -117,7 +109,7 @@ return `${mins}m`
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{completedVideos}</div>
-            <Progress value={progressPercentage} className="mt-2" />
+            <Progress value={progressPercentage} className="mt-2 h-1.5" />
           </CardContent>
         </Card>
 
@@ -134,17 +126,18 @@ return `${mins}m`
         </Card>
       </div>
 
+      {/* Course Content */}
       <Card className="border-none shadow-none">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Course Content</CardTitle>
-          <CardDescription className="text-xs">
+          <CardTitle className="text-lg font-semibold">Course Content</CardTitle>
+          <CardDescription className="text-xs text-muted-foreground">
             {completedVideos} of {totalVideos} videos completed
           </CardDescription>
         </CardHeader>
         <CardContent className="overflow-hidden p-0">
           <div className="h-[600px]">
             <ScrollArea className="h-full">
-              <div className="space-y-1.5 p-4">
+              <div className="space-y-0.5 p-4">
               {playlist.videos.map((video: any, index: number) => {
                 const isCompleted = video.progress[0]?.completed || false
                 
@@ -152,32 +145,32 @@ return `${mins}m`
                   <Button
                     key={video.id}
                     variant="ghost"
-                    className="h-auto w-full justify-start gap-3 p-3 text-left hover:bg-muted/50 rounded-lg transition-all overflow-hidden"
+                    className="h-auto w-full justify-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors"
                     asChild
                   >
                     <Link href={`/dashboard/playlists/${id}/video/${video.id}`} className="flex items-start gap-3 w-full min-w-0">
                       <div className={cn(
-                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                        "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors text-xs font-medium",
                         isCompleted
-                          ? "border-green-500/50 bg-green-500/10"
-                          : "border-muted-foreground/30 bg-background"
+                          ? "border-green-500/50 bg-green-500/10 text-green-600 dark:text-green-400"
+                          : "border-muted-foreground/30 bg-background text-muted-foreground"
                       )}>
                         {isCompleted ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                          <CheckCircle2 className="h-3.5 w-3.5" />
                         ) : (
-                          <span className="text-xs font-medium text-muted-foreground">{index + 1}</span>
+                          <span>{index + 1}</span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0 space-y-1 overflow-hidden">
                         <div className="font-medium text-sm leading-snug line-clamp-2 break-words">{video.title}</div>
                         {video.description && (
-                          <div className="line-clamp-1 text-xs text-muted-foreground break-words">
+                          <div className="text-xs text-muted-foreground break-words line-clamp-2 whitespace-pre-wrap">
                             {video.description}
                           </div>
                         )}
                       </div>
                       {video.duration && (
-                        <div className="text-sm text-muted-foreground shrink-0 ml-2">
+                        <div className="text-xs text-muted-foreground shrink-0 ml-2">
                           {formatDuration(video.duration)}
                         </div>
                       )}

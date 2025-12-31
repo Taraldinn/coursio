@@ -127,11 +127,11 @@ export function ExploreContent({
               </div>
             </ScrollArea>
           </div>
-          <div className="flex justify-center gap-1">
+          <div className="flex justify-center gap-1.5">
             {featuredPlaylists.map((_, index) => (
               <div
                 key={index}
-                className={`h-2 w-2 rounded-full ${
+                className={`h-2 w-2 rounded-full transition-colors ${
                   index === 0 ? "bg-primary" : "bg-muted"
                 }`}
               />
@@ -145,7 +145,12 @@ export function ExploreContent({
         {/* Filters Sidebar */}
         <div className="space-y-6">
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Filters</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-lg">Filters</h3>
+              <span className="text-xs text-muted-foreground">
+                {filteredPlaylists.length} {filteredPlaylists.length === 1 ? "course" : "courses"} found
+              </span>
+            </div>
 
             {/* Sort */}
             <div className="space-y-2">
@@ -154,7 +159,7 @@ export function ExploreContent({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-auto p-0 font-normal"
+                  className="h-auto p-0 font-normal text-sm"
                   onClick={() => {
                     const options: SortOption[] = ["newest", "oldest", "title", "duration"]
                     const currentIndex = options.indexOf(sortBy)
@@ -225,12 +230,6 @@ export function ExploreContent({
 
         {/* Course List */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              {filteredPlaylists.length} {filteredPlaylists.length === 1 ? "course" : "courses"} found
-            </p>
-          </div>
-
           <div className="space-y-3">
             {filteredPlaylists.length > 0 ? (
               filteredPlaylists.map((playlist) => (

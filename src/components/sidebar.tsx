@@ -20,6 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useSidebar } from "@/contexts/sidebar-context"
+import { Logo } from "@/components/logo"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -42,13 +43,8 @@ export function Sidebar() {
       <div className="flex h-full flex-col">
         {/* Logo */}
         <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-4">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-sidebar-primary" />
-            {!collapsed && (
-              <span className="text-lg font-semibold text-sidebar-foreground">
-                Coursio
-              </span>
-            )}
+          <Link href="/dashboard">
+            <Logo size="sm" showText={!collapsed} />
           </Link>
           
           {/* Collapse Toggle Button */}

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ShareMenu } from '@/components/share-menu';
 import {
@@ -16,7 +15,8 @@ import {
   Calendar,
   ChevronRight,
   CheckCircle2,
-  Circle
+  MoreVertical,
+  PlayCircle
 } from 'lucide-react';
 import { formatDuration } from '@/lib/playlist-utils';
 import { cn } from '@/lib/utils';
@@ -54,7 +54,7 @@ export default function PlaylistPage() {
     try {
       const response = await fetch(`/api/playlists?slug=${slug}`);
       if (!response.ok) throw new Error('Playlist not found');
-      
+
       const data = await response.json();
       setPlaylist(data[0]);
     } catch (error: any) {
@@ -67,7 +67,7 @@ export default function PlaylistPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
     );
@@ -83,226 +83,155 @@ export default function PlaylistPage() {
     0
   );
 
-  const visibilityBadge = {
-    PUBLIC: { label: 'Public', variant: 'default' as const },
-    UNLISTED: { label: 'Unlisted', variant: 'secondary' as const },
-    PRIVATE: { label: 'Private', variant: 'outline' as const }
-  }[playlist.visibility as 'PUBLIC' | 'UNLISTED' | 'PRIVATE'];
-
-  const difficultyColor = {
-    BEGINNER: 'bg-green-500/10 text-green-600 dark:text-green-400',
-    INTERMEDIATE: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
-    ADVANCED: 'bg-red-500/10 text-red-600 dark:text-red-400'
-  }[playlist.difficulty as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'];
-
-
   return (
-    <>
-      <div className="container max-w-7xl py-8">
-        {/* Header */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-8">
-          {/* Cover Image */}
-          <div className="lg:col-span-1">
-            <div className="aspect-video lg:aspect-square rounded-lg overflow-hidden bg-muted">
-              {(playlist.coverImageUrl || playlist.thumbnail) ? (
+    <div className="min-h-screen bg-background pb-20">
+      {/* Hero Section */}
+      <div className="relative w-full h-[50vh] min-h-[400px] overflow-hidden">
+        {/* Background Blur */}
+        <div className="absolute inset-0 z-0">
+          {playlist.coverImageUrl || playlist.thumbnail ? (
+            <img
+              src={playlist.coverImageUrl || playlist.thumbnail}
+              className="w-full h-full object-cover opacity-30 blur-3xl scale-110"
+              alt="Background"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 via-background to-background" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+        </div>
+
+        <div className="container relative z-10 h-full flex flex-col justify-end pb-12 px-6 mx-auto">
+          <div className="flex flex-col md:flex-row gap-8 items-end">
+            {/* Cover Image */}
+            <div className="w-full max-w-[300px] aspect-video md:aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border border-white/10 shrink-0">
+              {playlist.coverImageUrl || playlist.thumbnail ? (
                 <img
                   src={playlist.coverImageUrl || playlist.thumbnail}
                   alt={playlist.title}
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="flex items-center justify-center h-full">
-                  <Play className="h-16 w-16 text-muted-foreground" />
+                <div className="flex items-center justify-center h-full bg-muted/20 backdrop-blur-md">
+                  <PlayCircle className="h-20 w-20 text-white/50" />
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Info */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant={visibilityBadge.variant}>
-                {visibilityBadge.label}
-              </Badge>
-              {playlist.category && (
-                <Badge
-                  variant="outline"
-                  style={{ borderColor: playlist.category.color }}
-                >
-                  {playlist.category.name}
-                </Badge>
-              )}
-              {playlist.difficulty && (
-                <Badge variant="outline" className={difficultyColor}>
-                  {playlist.difficulty.toLowerCase()}
-                </Badge>
-              )}
-            </div>
-
-            <h1 className="text-4xl font-bold">{playlist.title}</h1>
-
-            {playlist.description && (
-              <p className="text-muted-foreground">{playlist.description}</p>
-            )}
-
-            {playlist.tags.length > 0 && (
+            {/* Info */}
+            <div className="flex-1 space-y-4 text-white">
               <div className="flex flex-wrap gap-2">
-                {playlist.tags.map((tag: string) => (
-                  <Badge key={tag} variant="secondary">
-                    {tag}
+                {playlist.category && (
+                  <Badge className="bg-primary/20 hover:bg-primary/30 text-primary border-0 text-xs backdrop-blur-md">
+                    {playlist.category.name}
                   </Badge>
-                ))}
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Play className="h-4 w-4" />
-                {playlist.videos.length} videos
-              </div>
-              {totalDuration > 0 && (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
+                )}
+                {playlist.difficulty && (
+                  <Badge variant="outline" className="border-white/20 text-white/80 text-xs">
+                    {playlist.difficulty}
+                  </Badge>
+                )}
+                <Badge variant="secondary" className="bg-white/10 hover:bg-white/20 text-white border-0 text-xs backdrop-blur-md">
                   {formatDuration(totalDuration)}
-                </div>
-              )}
-              {playlist.mode === 'YOUTUBE_IMPORT' && (
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  YouTube Playlist
-                </div>
-              )}
-            </div>
-
-            {typeof playlist.progress === 'number' && playlist.progress > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Your Progress</span>
-                  <span className="font-medium">
-                    {playlist.completedVideos}/{playlist.videos.length} completed
-                  </span>
-                </div>
-                <Progress value={playlist.progress} className="h-2" />
+                </Badge>
               </div>
-            )}
 
-            <div className="flex gap-3 pt-4">
-              <Button size="lg" asChild>
-                <Link href={`/playlist/${slug}/watch`}>
-                  <Play className="h-4 w-4 mr-2" />
-                  Start Watching
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => setShareMenuOpen(true)}
-              >
-                <Share2 className="h-4 w-4 mr-2" />
-                Share
-              </Button>
-              {isOwner && (
-                <Button size="lg" variant="outline" asChild>
-                  <Link href={`/playlist/${slug}/edit`}>
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight">
+                {playlist.title}
+              </h1>
+
+              {playlist.description && (
+                <p className="text-lg text-white/70 max-w-2xl line-clamp-2">
+                  {playlist.description}
+                </p>
+              )}
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Button size="lg" className="h-12 px-8 text-base font-semibold shadow-xl shadow-primary/20" asChild>
+                  <Link href={`/playlist/${slug}/watch`}>
+                    <Play className="h-5 w-5 mr-2 fill-current" />
+                    Start Watching
                   </Link>
                 </Button>
-              )}
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="h-12 bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-md"
+                  onClick={() => setShareMenuOpen(true)}
+                >
+                  <Share2 className="h-5 w-5 mr-2" />
+                  Share
+                </Button>
+                {isOwner && (
+                  <Button variant="secondary" size="lg" className="h-12 bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-md" asChild>
+                    <Link href={`/playlist/${slug}/edit`}>
+                      <Edit className="h-5 w-5 mr-2" />
+                      Edit Course
+                    </Link>
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Videos List */}
-        <div className="space-y-3">
-          <h2 className="text-2xl font-bold">Videos</h2>
-          <div className="h-[800px]">
-            <ScrollArea className="h-full">
-              <div className="space-y-2 p-4">
-              {playlist.videos.map((video: any, index: number) => (
-                <Link
-                  key={video.id}
-                  href={`/playlist/${slug}/watch?video=${video.id}`}
-                  className="block overflow-hidden"
-                >
-                  <div className="border rounded-lg p-4 hover:bg-muted/50 transition-all duration-200 hover:shadow-sm overflow-hidden">
-                    <div className="flex gap-4 w-full min-w-0">
-                      {/* Number/Status */}
-                      <div className={cn(
-                        "flex items-center justify-center w-8 h-8 rounded-full border-2 transition-colors shrink-0",
-                        video.progress?.[0]?.completed
-                          ? "border-green-500/50 bg-green-500/10"
-                          : "border-muted-foreground/30 bg-muted"
-                      )}>
-                        {video.progress?.[0]?.completed ? (
-                          <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
-                        ) : (
-                          <span className="text-xs font-medium text-muted-foreground">{index + 1}</span>
-                        )}
-                      </div>
+      <div className="container mx-auto px-6 py-12">
+        <div className="max-w-5xl mx-auto space-y-8">
+          <div className="flex items-center justify-between border-b border-border/50 pb-4">
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              Course Content
+              <Badge variant="secondary" className="rounded-full px-2.5">
+                {playlist.videos.length}
+              </Badge>
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {typeof playlist.progress === 'number' && playlist.progress > 0
+                ? `${playlist.progress}% Completed`
+                : "Not started"}
+            </p>
+          </div>
 
-                      {/* Thumbnail */}
-                      <div className="w-32 h-20 rounded overflow-hidden bg-muted flex-shrink-0">
-                        {video.thumbnail ? (
-                          <img
-                            src={video.thumbnail}
-                            alt={video.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex items-center justify-center h-full">
-                            <Play className="h-6 w-6 text-muted-foreground" />
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Info */}
-                      <div className="flex-1 min-w-0 overflow-hidden">
-                        <h3 className="font-medium line-clamp-1 text-sm break-words">{video.title}</h3>
-                        {video.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1 break-words">
-                            {video.description}
-                          </p>
-                        )}
-                        <div className="flex flex-wrap gap-3 mt-2 text-xs text-muted-foreground">
-                          {video.duration && (
-                            <span className="flex items-center gap-1 shrink-0">
-                              <Clock className="h-3 w-3 shrink-0" />
-                              <span className="truncate">{formatDuration(video.duration)}</span>
-                            </span>
-                          )}
-                          {video.dueDate && (
-                            <span className="flex items-center gap-1 shrink-0">
-                              <Calendar className="h-3 w-3 shrink-0" />
-                              <span className="truncate">Due {new Date(video.dueDate).toLocaleDateString()}</span>
-                            </span>
-                          )}
-                          {video.provider && video.provider !== 'YOUTUBE' && (
-                            <Badge variant="outline" className="h-5 text-xs shrink-0">
-                              {video.provider}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Progress */}
-                      {video.progress?.[0] && (
-                        <div className="flex items-center shrink-0 ml-2">
-                          {video.progress[0].progressPercent > 0 && (
-                            <div className="text-sm text-muted-foreground whitespace-nowrap">
-                              {video.progress[0].progressPercent}%
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 ml-2" />
+          <div className="grid gap-2">
+            {playlist.videos.map((video: any, index: number) => (
+              <Link
+                key={video.id}
+                href={`/playlist/${slug}/watch?video=${video.id}`}
+                className="group flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-border/40 bg-card/40 hover:bg-card/80 transition-all hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5"
+              >
+                {/* Thumbnail (small) */}
+                <div className="relative w-full sm:w-40 aspect-video rounded-lg overflow-hidden bg-black/20 shrink-0">
+                  {video.thumbnail ? (
+                    <img src={video.thumbnail} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <Play className="h-8 w-8 text-muted-foreground/50" />
                     </div>
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                    <PlayCircle className="h-8 w-8 text-white" />
                   </div>
-                </Link>
-              ))}
-              </div>
-            </ScrollArea>
+                  <div className="absolute bottom-1 right-1 bg-black/80 text-white text-[10px] px-1 rounded font-mono">
+                    {formatDuration(video.duration || 0)}
+                  </div>
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 flex flex-col justify-center gap-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-semibold text-base leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                      {index + 1}. {video.title}
+                    </h3>
+                    {video.progress?.[0]?.completed && (
+                      <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2 max-w-2xl">
+                    {video.description || "No description available."}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
@@ -313,6 +242,6 @@ export default function PlaylistPage() {
         playlistSlug={slug}
         playlistTitle={playlist.title}
       />
-    </>
+    </div>
   );
 }

@@ -14,7 +14,7 @@ export default async function LibraryPage() {
     redirect("/sign-in")
   }
 
-  let playlists = []
+  let playlists: any[] = []
   try {
     playlists = await prisma.playlist.findMany({
       where: { userId: user.id },

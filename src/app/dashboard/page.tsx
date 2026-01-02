@@ -25,37 +25,63 @@ export default async function DashboardPage() {
     stats.continueLearningPlaylists = dashboardStats.continueLearningPlaylists || []
 
     // Get recently released playlists (simulated query for now, or fetch all public)
-    const recentPlaylists = await prisma.playlist.findMany({
-      where: {
-        // For now, let's just show some playlists, maybe public ones or user's own
-        OR: [
-          { visibility: "PUBLIC" },
-          { userId: user.id }
-        ]
-      },
-      include: {
-        videos: {
-          select: {
-            id: true,
-            duration: true
-          }
+    // Get recently released playlists (simulated query for now, or fetch all public)
+    let recentPlaylists = []
+    try {
+      recentPlaylists = await prisma.playlist.findMany({
+        where: {
+          OR: [
+            { visibility: "PUBLIC" },
+            { userId: user.id }
+          ]
         },
-        category: true
-      },
-      orderBy: { createdAt: "desc" },
-      take: 6
-    })
+        include: {
+          videos: {
+            select: {
+              id: true,
+              duration: true
+            }
+          },
+          category: true
+        },
+        orderBy: { createdAt: "desc" },
+        take: 6
+      })
+    } catch (e) {
+      console.warn("Database connection failed, using mock recent playlists", e)
+      // Mock data
+      recentPlaylists = [
+        {
+          id: 'mock-1',
+          title: 'Introduction to DevOps',
+          description: 'Learn the basics of DevOps.',
+          thumbnail: 'https://images.unsplash.com/photo-1607799275518-d58665d099db?auto=format&fit=crop&q=80&w=600',
+          slug: 'development-mode',
+          author: { name: 'Coursio Team' },
+          category: { name: 'DevOps', color: '#10B981' },
+          videos: [{ id: 'v1', duration: 120 }, { id: 'v2', duration: 180 }]
+        },
+        {
+          id: 'mock-2',
+          title: 'Advanced React Patterns',
+          description: 'Master React with advanced patterns.',
+          thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=600',
+          slug: 'react-advanced',
+          author: { name: 'Coursio Team' },
+          category: { name: 'Frontend', color: '#3B82F6' },
+          videos: [{ id: 'v1', duration: 300 }]
+        }
+      ] as any
+    }
 
     stats.recentlyReleasedPlaylists = recentPlaylists.map((playlist: any) => {
       const totalCount = playlist.videos.length
-      // Since we don't fetch progress for all public, we might not have it here unless we include it. 
-      // But for "Recently Released" usually it's just general course info.
       return {
         ...playlist,
         completedCount: 0,
         totalCount,
         progress: 0,
-        firstVideoTitle: playlist.videos[0]?.title || ""
+        firstVideoTitle: playlist.videos && playlist.videos[0] ? (playlist.videos[0].title || "Video 1") : ""
       }
     })
   } catch (error) {

@@ -52,6 +52,12 @@ export function WatchPageClient({
 
     // Handle saving notes from the sidebar
     const handleNoteSave = async (videoId: string, note: string) => {
+        if (slug === 'development-mode') {
+            console.log("Mock Mode: Note saved successfully", note)
+            // Evaluate command if user types /
+            return
+        }
+
         try {
             const response = await fetch(`/api/videos/${videoId}/notes`, {
                 method: "POST",

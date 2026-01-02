@@ -50,6 +50,22 @@ export function WatchPageClient({
     const [isContentOpen, setIsContentOpen] = useState(true)
     const [isNotesOpen, setIsNotesOpen] = useState(false)
 
+    // Handle saving notes from the sidebar
+    const handleNoteSave = async (videoId: string, note: string) => {
+        try {
+            const response = await fetch(`/api/videos/${videoId}/notes`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ notes: note }),
+            })
+
+            if (!response.ok) throw new Error("Failed to save notes")
+        } catch (error) {
+            console.error("Failed to save note", error)
+            throw error
+        }
+    }
+
     return (
         <TooltipProvider>
             <div className="flex h-screen w-full bg-black text-white overflow-hidden">
@@ -182,29 +198,17 @@ export function WatchPageClient({
                         isNotesOpen ? "w-[400px] opacity-100" : "w-0 opacity-0 border-none"
                     )}
                 >
-                    <div className="h-14 border-b border-white/10 flex items-center justify-between px-4 shrink-0 min-w-[400px] bg-[#0A0A0A]">
-                        <div className="flex items-center gap-2 text-white font-medium text-sm">
-                            <FileText className="h-4 w-4 text-primary" />
-                            Take Notes
-                        </div>
-                        <div className="flex gap-1">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10 rounded-lg"
-                                onClick={() => setIsNotesOpen(false)}
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 relative bg-[#0A0A0A] min-w-[400px]">
-                        <NotesPanel videoId={currentVideo.id} initialNotes={currentVideo.notes || ""} />
-                    </div>
-
-                    <div className="h-10 border-t border-white/10 flex items-center px-4 text-[11px] text-white/30 bg-[#0F0F0F] min-w-[400px]">
-                        Enter text or type '/' for commands
+                    {/* Notes Sidebar Content */}
+                    <div className="flex-1 overflow-hidden min-w-[400px]">
+                        <NotesSidebar
+                            videos={playlist.videos}
+                            currentVideoId={currentVideo.id}
+                            onNoteSave={handleNoteSave}
+                            onVideoSelect={(id) => {
+                                // Optional: Navigate to video if desired
+                                // router.push(`/playlist/${slug}/watch?v=${id}`)
+                            }}
+                        />
                     </div>
                 </div>
             </div>

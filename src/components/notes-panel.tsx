@@ -52,8 +52,8 @@ export function NotesPanel({ videoId, initialNotes = "" }: NotesPanelProps) {
                 <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Enter text or type '/' for commands"
-                    className="w-full h-full resize-none bg-transparent p-4 text-sm font-mono text-white/80 placeholder:text-white/20 focus:outline-none focus:ring-0 leading-relaxed border-0"
+                    placeholder=""
+                    className="w-full h-full resize-none bg-transparent p-4 text-xs font-mono text-white/80 placeholder:text-white/20 focus:outline-none focus:ring-0 leading-relaxed border-0"
                     spellCheck={false}
                 />
 

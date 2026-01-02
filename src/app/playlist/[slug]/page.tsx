@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ShareMenu } from '@/components/share-menu';
+import { Header } from '@/components/header';
 import {
   Play,
   Clock,
@@ -85,6 +86,8 @@ export default function PlaylistPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      <Header />
+
       {/* Hero Section */}
       <div className="relative w-full h-[50vh] min-h-[400px] overflow-hidden">
         {/* Background Blur */}
@@ -101,7 +104,7 @@ export default function PlaylistPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
         </div>
 
-        <div className="container relative z-10 h-full flex flex-col justify-end pb-12 px-6 mx-auto">
+        <div className="container relative z-10 h-full flex flex-col justify-end pb-12 px-6 mx-auto pt-20">
           <div className="flex flex-col md:flex-row gap-8 items-end">
             {/* Cover Image */}
             <div className="w-full max-w-[300px] aspect-video md:aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border border-white/10 shrink-0">

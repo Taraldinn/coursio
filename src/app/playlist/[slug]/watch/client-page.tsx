@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils'
 import { CourseContentsSidebar } from '@/components/course-contents-sidebar'
 import { EnhancedVideoPlayer } from '@/components/enhanced-video-player'
 import { NotesPanel } from '@/components/notes-panel'
+import { NotesSidebar } from '@/components/notes-sidebar'
 import { extractYouTubeVideoId } from '@/lib/youtube'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 

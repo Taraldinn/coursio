@@ -175,8 +175,16 @@ export default async function VideoPage({ params }: VideoPageProps) {
       {/* Right Sidebar - Notes */}
       <div className="w-96 border-l bg-background flex flex-col">
         <NotesSidebar
-          videoId={video.id}
-          initialContent={userNote || ""}
+          videos={video.playlist.videos.map((v) => ({
+            id: v.id,
+            title: v.title,
+            notes: v.notes,
+            updatedAt: v.updatedAt,
+            position: v.position,
+          }))}
+          currentVideoId={video.id}
+          onNoteSave={async () => { }}
+          onVideoSelect={() => { }}
         />
       </div>
     </div>

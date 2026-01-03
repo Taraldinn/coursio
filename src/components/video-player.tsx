@@ -6,7 +6,7 @@ import { updateProgress } from "@/app/actions/progress"
 
 interface VideoPlayerProps {
   videoId: string
-  url: string
+  url: string | null
   youtubeId?: string | null
   initialProgress?: number
 }
@@ -55,8 +55,8 @@ export function VideoPlayer({ videoId, url, youtubeId, initialProgress = 0 }: Vi
   }, [videoId, initialProgress])
 
   // Determine video source
-  const isYouTube = youtubeId || url.includes("youtube.com") || url.includes("youtu.be")
-  
+  const isYouTube = youtubeId || (url && (url.includes("youtube.com") || url.includes("youtu.be")))
+
   if (isYouTube && youtubeId) {
     // For YouTube videos, we'll use an iframe embed
     return (
@@ -68,6 +68,15 @@ export function VideoPlayer({ videoId, url, youtubeId, initialProgress = 0 }: Vi
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
+      </div>
+    )
+  }
+
+  // If no valid url, show placeholder
+  if (!url) {
+    return (
+      <div className="aspect-video w-full overflow-hidden rounded-lg bg-black flex items-center justify-center text-white/50">
+        No video source available
       </div>
     )
   }
@@ -88,3 +97,4 @@ export function VideoPlayer({ videoId, url, youtubeId, initialProgress = 0 }: Vi
     />
   )
 }
+

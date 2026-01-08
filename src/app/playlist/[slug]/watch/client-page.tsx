@@ -36,6 +36,8 @@ import { cn } from '@/lib/utils'
 import { EnhancedVideoPlayer } from '@/components/enhanced-video-player'
 import { extractYouTubeVideoId } from '@/lib/youtube'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { MilkdownEditor } from '@/components/milkdown-editor'
+import { AIChat } from '@/components/ai-chat'
 
 interface WatchPageClientProps {
     playlist: any
@@ -609,12 +611,11 @@ export function WatchPageClient({
 
                                                         {/* Notes Editor - Full Page */}
                                                         <div className="min-h-[500px]">
-                                                            <textarea
+                                                            <MilkdownEditor
                                                                 value={noteContent}
-                                                                onChange={(e) => setNoteContent(e.target.value)}
+                                                                onChange={setNoteContent}
                                                                 placeholder="Start taking notes..."
-                                                                className="w-full h-full min-h-[500px] resize-none bg-transparent text-sm leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none border-0 p-2"
-                                                                spellCheck={false}
+                                                                minHeight="500px"
                                                             />
                                                         </div>
                                                     </div>
@@ -667,12 +668,11 @@ export function WatchPageClient({
                                                 {/* Notes Editor */}
                                                 <div className="flex-1 overflow-y-auto">
                                                     <div className="h-full p-4">
-                                                        <textarea
+                                                        <MilkdownEditor
                                                             value={noteContent}
-                                                            onChange={(e) => setNoteContent(e.target.value)}
+                                                            onChange={setNoteContent}
                                                             placeholder="Start taking notes..."
-                                                            className="w-full h-full min-h-[400px] resize-none bg-transparent text-sm leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none border-0"
-                                                            spellCheck={false}
+                                                            minHeight="400px"
                                                         />
                                                     </div>
                                                 </div>
@@ -713,22 +713,11 @@ export function WatchPageClient({
                                                     </div>
                                                 </div>
 
-                                                {/* AI Content */}
-                                                <div className="flex-1 overflow-y-auto">
-                                                    <div className="h-full p-4">
-                                                        <div className="flex h-full flex-col">
-                                                            <div className="mb-4 flex-1 overflow-y-auto">
-                                                                <div className="py-8 text-center">
-                                                                    <Bot className="text-primary mx-auto mb-4 h-12 w-12" />
-                                                                    <h3 className="mb-2 text-lg font-semibold">AI Assistant</h3>
-                                                                    <p className="text-muted-foreground text-sm">
-                                                                        Assistant plugin will be available soon
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                {/* AI Chat Content */}
+                                                <AIChat
+                                                    context={`Video: ${currentVideo.title}\n\nNotes:\n${noteContent}`}
+                                                    className="flex-1"
+                                                />
                                             </div>
                                         </aside>
                                     )}

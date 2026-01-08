@@ -169,11 +169,11 @@ export function WatchPageClient({
     return (
         <TooltipProvider>
             <div className="bg-background h-screen overflow-hidden">
-                <div className="from-background to-background/95 flex h-screen flex-col overflow-hidden bg-gradient-to-br">
+                <div className="flex h-screen flex-col overflow-hidden">
                     <div className="relative flex h-full min-h-0">
                         <div className="grid flex-1 grid-cols-[auto_auto_1fr]">
                             {/* Left Icon Navbar */}
-                            <div className="border-border bg-card/50 z-50 flex h-full w-16 flex-col border-r backdrop-blur-sm">
+                            <div className="border-border bg-card z-50 flex h-full w-16 flex-col border-r">
                                 {/* Logo */}
                                 <div className="border-border flex h-16 items-center justify-center border-b">
                                     <button
@@ -218,12 +218,12 @@ export function WatchPageClient({
                             {/* Left Panel Content */}
                             <div
                                 className={cn(
-                                    "border-border bg-card/30 flex flex-col overflow-hidden border-r backdrop-blur-sm transition-all duration-300 ease-in-out",
+                                    "border-border bg-card flex flex-col overflow-hidden border-r transition-all duration-300 ease-in-out",
                                     isLeftPanelOpen ? "w-80 opacity-100" : "w-0 opacity-0"
                                 )}
                             >
                                 {/* Panel Header */}
-                                <div className="border-border from-primary/5 via-primary/10 to-primary/5 flex h-16 items-center border-b bg-gradient-to-r px-4 backdrop-blur-sm">
+                                <div className="border-border bg-card flex h-16 items-center border-b px-4">
                                     <div className="flex min-w-0 items-center gap-3">
                                         <div className="bg-primary/10 text-primary rounded-lg p-1.5">
                                             {activePanel === "contents" && <BookOpen className="h-4 w-4" />}
@@ -374,7 +374,7 @@ export function WatchPageClient({
                             {/* Main Content Area */}
                             <div className="flex min-w-0 flex-col overflow-hidden">
                                 {/* Top Header Bar */}
-                                <div className="border-border/50 bg-background flex h-16 items-center justify-between border-b px-4">
+                                <div className="border-border bg-card flex h-16 items-center justify-between border-b px-4">
                                     <div className="flex items-center gap-3">
                                         <Tooltip>
                                             <TooltipTrigger asChild>
@@ -475,8 +475,8 @@ export function WatchPageClient({
                                 {/* Main Content with optional Notes Panel */}
                                 <div className="relative flex min-h-0 flex-1">
                                     {/* Main Content Area - Video or Notes Page */}
-                                    <main className="relative min-w-0 flex-1 overflow-y-auto">
-                                        <div className="bg-muted/20 min-h-full transition-all duration-300">
+                                    <main className="relative min-w-0 flex-1 overflow-y-auto bg-background">
+                                        <div className="min-h-full transition-all duration-300">
                                             {viewMode === "video" ? (
                                                 /* Video View */
                                                 <div className="container mx-auto max-w-5xl px-6 py-6">
@@ -605,7 +605,7 @@ export function WatchPageClient({
                                                         </div>
 
                                                         {/* Divider */}
-                                                        <div className="from-primary/5 via-primary/10 to-primary/5 mt-5 mb-3 h-[1px] w-full bg-gradient-to-r" />
+                                                        <div className="border-border mt-5 mb-3 h-[1px] w-full border-t" />
 
                                                         {/* Notes Editor - Full Page */}
                                                         <div className="min-h-[500px]">
@@ -626,9 +626,9 @@ export function WatchPageClient({
                                     {/* Right Panel - Notes (video mode) or AI Assistant (notes mode) */}
                                     {viewMode === "video" && isNotesOpen && !isAIPanelOpen && (
                                         <aside className="relative flex h-full flex-shrink-0">
-                                            <div className="border-border bg-card/50 flex h-full flex-col overflow-hidden border-l backdrop-blur-sm w-96">
+                                            <div className="border-border bg-card flex h-full flex-col overflow-hidden border-l w-96">
                                                 {/* Resize Handle */}
-                                                <div className="hover:bg-primary/20 absolute top-0 left-0 z-10 h-full w-1 cursor-col-resize transition-colors">
+                                                <div className="hover:bg-accent absolute top-0 left-0 z-10 h-full w-1 cursor-col-resize transition-colors">
                                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform">
                                                         <GripVertical className="text-muted-foreground/50 h-4 w-4" />
                                                     </div>
@@ -636,9 +636,9 @@ export function WatchPageClient({
 
                                                 {/* Notes Header */}
                                                 <div className="flex-shrink-0">
-                                                    <div className="border-border from-primary/5 via-primary/10 to-primary/5 flex h-12 items-center justify-between border-b bg-gradient-to-r px-4">
+                                                    <div className="border-border bg-card flex h-12 items-center justify-between border-b px-4">
                                                         <div className="flex items-center gap-3">
-                                                            <FileText className="h-5 w-5 text-blue-500" />
+                                                            <FileText className="h-5 w-5 text-primary" />
                                                             <div>
                                                                 <h3 className="text-sm font-semibold">Take Notes</h3>
                                                             </div>
@@ -683,9 +683,9 @@ export function WatchPageClient({
                                     {/* AI Assistant Panel (for notes page view) */}
                                     {(viewMode === "notes" || isAIPanelOpen) && (
                                         <aside className="relative flex h-full flex-shrink-0">
-                                            <div className="border-border bg-card/50 flex h-full flex-col overflow-hidden border-l backdrop-blur-sm w-96">
+                                            <div className="border-border bg-card flex h-full flex-col overflow-hidden border-l w-96">
                                                 {/* Resize Handle */}
-                                                <div className="hover:bg-primary/20 absolute top-0 left-0 z-10 h-full w-1 cursor-col-resize transition-colors">
+                                                <div className="hover:bg-accent absolute top-0 left-0 z-10 h-full w-1 cursor-col-resize transition-colors">
                                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform">
                                                         <GripVertical className="text-muted-foreground/50 h-4 w-4" />
                                                     </div>
@@ -693,9 +693,9 @@ export function WatchPageClient({
 
                                                 {/* AI Header */}
                                                 <div className="flex-shrink-0">
-                                                    <div className="border-border from-primary/5 via-primary/10 to-primary/5 flex h-12 items-center justify-between border-b bg-gradient-to-r px-4">
+                                                    <div className="border-border bg-card flex h-12 items-center justify-between border-b px-4">
                                                         <div className="flex items-center gap-3">
-                                                            <Bot className="h-5 w-5 text-blue-500" />
+                                                            <Bot className="h-5 w-5 text-primary" />
                                                             <div>
                                                                 <h3 className="text-sm font-semibold">AI Assistant</h3>
                                                             </div>

@@ -15,6 +15,8 @@ export default async function DashboardLayout({
   }
 
   return (
-    <DashboardContent>{children}</DashboardContent>
+    <SidebarProvider>
+      <DashboardContent>{children}</DashboardContent>
+    </SidebarProvider>
   )
 }

@@ -38,6 +38,7 @@ import { extractYouTubeVideoId } from '@/lib/youtube'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { MilkdownEditor } from '@/components/milkdown-editor'
 import { AIChat } from '@/components/ai-chat'
+import { Logo } from '@/components/logo'
 
 interface WatchPageClientProps {
     playlist: any
@@ -180,11 +181,9 @@ export function WatchPageClient({
                                 <div className="border-border flex h-16 items-center justify-center border-b">
                                     <button
                                         onClick={() => router.push('/dashboard')}
-                                        className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold"
+                                        className="flex h-8 w-8 items-center justify-center"
                                     >
-                                        <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold">
-                                            C
-                                        </div>
+                                        <Logo size="sm" showText={false} iconOnly />
                                     </button>
                                 </div>
 

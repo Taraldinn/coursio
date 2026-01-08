@@ -4,9 +4,10 @@ interface LogoProps {
   className?: string
   showText?: boolean
   size?: "sm" | "md" | "lg"
+  iconOnly?: boolean
 }
 
-export function Logo({ className, showText = true, size = "md" }: LogoProps) {
+export function Logo({ className, showText = true, size = "md", iconOnly = false }: LogoProps) {
   const sizeClasses = {
     sm: "h-6 w-6",
     md: "h-8 w-8",
@@ -19,43 +20,48 @@ export function Logo({ className, showText = true, size = "md" }: LogoProps) {
     lg: "text-2xl"
   }
 
+  const LogoIcon = ({ iconClassName }: { iconClassName?: string }) => (
+    <svg
+      className={iconClassName}
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Rounded square background */}
+      <rect x="2" y="2" width="36" height="36" rx="8" fill="url(#coursio-gradient)" />
+
+      {/* Checkmark/tick mark */}
+      <path
+        d="M12 21L17 26L28 14"
+        fill="none"
+        stroke="white"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Gradient definition */}
+      <defs>
+        <linearGradient id="coursio-gradient" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6366F1" />
+          <stop offset="50%" stopColor="#8B5CF6" />
+          <stop offset="100%" stopColor="#A855F7" />
+        </linearGradient>
+      </defs>
+    </svg>
+  )
+
+  if (iconOnly) {
+    return <LogoIcon iconClassName={cn(sizeClasses[size], className)} />
+  }
+
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <svg
-        className={sizeClasses[size]}
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Background circle with gradient */}
-        <circle cx="20" cy="20" r="20" fill="url(#gradient)" />
-        
-        {/* Letter C */}
-        <path
-          d="M20 10C14.477 10 10 14.477 10 20C10 25.523 14.477 30 20 30"
-          stroke="white"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-        
-        {/* Book/Pages lines inside C */}
-        <line x1="15" y1="15" x2="18" y2="15" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="15" y1="20" x2="18" y2="20" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="15" y1="25" x2="18" y2="25" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-        
-        {/* Gradient definition */}
-        <defs>
-          <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#3B82F6" />
-            <stop offset="100%" stopColor="#8B5CF6" />
-          </linearGradient>
-        </defs>
-      </svg>
-      
+      <LogoIcon iconClassName={sizeClasses[size]} />
+
       {showText && (
         <span className={cn("font-bold text-foreground", textSizes[size])}>
-          coursioo
+          coursio
         </span>
       )}
     </div>

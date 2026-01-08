@@ -7,8 +7,6 @@ import { commonmark } from "@milkdown/preset-commonmark"
 import { gfm } from "@milkdown/preset-gfm"
 import { nord } from "@milkdown/theme-nord"
 import { listener, listenerCtx } from "@milkdown/plugin-listener"
-
-// @ts-expect-error - CSS import for Milkdown theme
 import "@milkdown/theme-nord/style.css"
 
 interface MilkdownEditorContentProps {
@@ -69,12 +67,16 @@ export function MilkdownEditor({
     className = "",
     minHeight = "400px"
 }: MilkdownEditorProps) {
+    // Ensure placeholder text is safe for CSS content usage
+    const safePlaceholder = placeholder.replace(/"/g, '\\"')
+
     return (
-        <div
-            className={`milkdown-editor-wrapper ${className}`}
-            style={{ minHeight }}
-        >
-            <style jsx global>{`
+        <MilkdownProvider>
+            <div
+                className={`milkdown-editor-wrapper ${className}`}
+                style={{ minHeight }}
+            >
+                <style jsx global>{`
                 .milkdown-editor-wrapper {
                     width: 100%;
                     height: 100%;
@@ -112,7 +114,7 @@ export function MilkdownEditor({
                 
                 /* Empty placeholder */
                 .milkdown-editor-wrapper .ProseMirror p.is-editor-empty:first-child::before {
-                    content: "${placeholder}";
+                    content: "${safePlaceholder}";
                     float: left;
                     color: hsl(var(--muted-foreground) / 0.5);
                     pointer-events: none;
@@ -301,13 +303,14 @@ export function MilkdownEditor({
                     background: hsl(var(--primary) / 0.2);
                 }
             `}</style>
-            <MilkdownProvider>
-                <MilkdownEditorContent
-                    value={value}
-                    onChange={onChange}
-                    placeholder={placeholder}
-                />
-            </MilkdownProvider>
-        </div>
-    )
+                <MilkdownProvider>
+                    <MilkdownEditorContent
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                    />
+                </MilkdownProvider>
+                <MilkdownEditorContent value={value} onChange={onChange} placeholder={placeholder} />
+            </div>
+        </MilkdownProvider>
 }

@@ -49,6 +49,7 @@ export function TiptapEditor({
     lowlight.register('typescript', ts)
 
     const editor = useEditor({
+        immediatelyRender: false,
         extensions: [
             StarterKit.configure({
                 codeBlock: false,

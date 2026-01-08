@@ -303,14 +303,12 @@ export function MilkdownEditor({
                     background: hsl(var(--primary) / 0.2);
                 }
             `}</style>
-                <MilkdownProvider>
-                    <MilkdownEditorContent
-                        value={value}
-                        onChange={onChange}
-                        placeholder={placeholder}
-                    />
-                </MilkdownProvider>
-                <MilkdownEditorContent value={value} onChange={onChange} placeholder={placeholder} />
+                <MilkdownEditorContent
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                />
             </div>
         </MilkdownProvider>
+    )
 }

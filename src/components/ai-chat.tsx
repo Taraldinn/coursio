@@ -104,7 +104,7 @@ Be concise, helpful, and educational. If the user asks about something not relat
                         ...messages.map(m => ({ role: m.role, content: m.content })),
                         { role: "user", content: userMessage.content }
                     ],
-                    max_tokens: 1000,
+                    max_tokens: 10000000000,
                     temperature: 0.7
                 })
             })

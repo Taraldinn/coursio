@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma'
 import { WatchPageClient } from './client-page'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { SidebarProvider } from '@/contexts/sidebar-context'
 
 export default async function WatchPage({
     params,
@@ -113,11 +114,13 @@ export default async function WatchPage({
     }
 
     return (
-        <WatchPageClient
-            playlist={playlist}
-            currentVideo={currentVideo}
-            slug={slug}
-            userId={userId}
-        />
+        <SidebarProvider>
+            <WatchPageClient
+                playlist={playlist}
+                currentVideo={currentVideo}
+                slug={slug}
+                userId={userId}
+            />
+        </SidebarProvider>
     )
 }

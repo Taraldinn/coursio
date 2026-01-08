@@ -27,6 +27,8 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { Sidebar } from "@/components/sidebar"
+import { useSidebar } from "@/contexts/sidebar-context"
 import { CourseContentsSidebar } from '@/components/course-contents-sidebar'
 import { EnhancedVideoPlayer } from '@/components/enhanced-video-player'
 import { NotesPanel } from '@/components/notes-panel'
@@ -49,6 +51,7 @@ export function WatchPageClient({
 }: WatchPageClientProps) {
     const [isContentOpen, setIsContentOpen] = useState(true)
     const [isNotesOpen, setIsNotesOpen] = useState(false)
+    const { collapsed } = useSidebar()
 
     // Handle saving notes from the sidebar
     const handleNoteSave = async (videoId: string, note: string) => {
@@ -74,7 +77,11 @@ export function WatchPageClient({
 
     return (
         <TooltipProvider>
-            <div className="flex h-screen w-full bg-black text-white overflow-hidden">
+            <Sidebar />
+            <div className={cn(
+                "flex h-screen w-full bg-black text-white overflow-hidden transition-all duration-300",
+                collapsed ? "ml-16" : "ml-56"
+            )}>
                 {/* 1. Course Contents Drawer (Left Sidebar) */}
                 <div
                     className={cn(

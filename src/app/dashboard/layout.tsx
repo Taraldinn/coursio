@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
-import { SidebarProvider } from "@/contexts/sidebar-context"
+
 import { DashboardContent } from "@/components/dashboard-content"
 
 export default async function DashboardLayout({
@@ -15,8 +15,6 @@ export default async function DashboardLayout({
   }
 
   return (
-    <SidebarProvider>
-      <DashboardContent>{children}</DashboardContent>
-    </SidebarProvider>
+    <DashboardContent>{children}</DashboardContent>
   )
 }

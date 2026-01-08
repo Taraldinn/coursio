@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import dynamic from "next/dynamic"
 import { updateProgress } from "@/app/actions/progress"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -24,6 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false })
+
 interface EnhancedVideoPlayerProps {
   videoId: string
   url: string
@@ -37,6 +40,7 @@ export function EnhancedVideoPlayer({
   youtubeId,
   initialProgress = 0,
 }: EnhancedVideoPlayerProps) {
+  const playerRef = useRef<any>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -51,6 +55,7 @@ export function EnhancedVideoPlayer({
   const hideControlsTimeout = useRef<NodeJS.Timeout | null>(null)
 
   const isYouTube = youtubeId || url.includes("youtube.com") || url.includes("youtu.be")
+  const videoUrl = isYouTube ? `https://www.youtube.com/watch?v=${youtubeId}` : url
 
   useEffect(() => {
     const video = videoRef.current
@@ -99,37 +104,23 @@ export function EnhancedVideoPlayer({
   }, [videoId, initialProgress, isYouTube])
 
   const togglePlay = () => {
-    const video = videoRef.current
-    if (!video) return
-
-    if (isPlaying) {
-      video.pause()
-    } else {
-      video.play()
-    }
     setIsPlaying(!isPlaying)
   }
 
   const handleSeek = (value: number[]) => {
-    const video = videoRef.current
-    if (!video) return
-    video.currentTime = value[0]
-    setCurrentTime(value[0])
+    if (playerRef.current) {
+      playerRef.current.seekTo(value[0], 'seconds')
+      setCurrentTime(value[0])
+    }
   }
 
   const handleVolumeChange = (value: number[]) => {
-    const video = videoRef.current
-    if (!video) return
     const newVolume = value[0]
-    video.volume = newVolume
     setVolume(newVolume)
     setIsMuted(newVolume === 0)
   }
 
   const toggleMute = () => {
-    const video = videoRef.current
-    if (!video) return
-    video.muted = !isMuted
     setIsMuted(!isMuted)
   }
 
@@ -149,16 +140,15 @@ export function EnhancedVideoPlayer({
   }
 
   const changePlaybackRate = (rate: number) => {
-    const video = videoRef.current
-    if (!video) return
-    video.playbackRate = rate
     setPlaybackRate(rate)
   }
 
   const skip = (seconds: number) => {
-    const video = videoRef.current
-    if (!video) return
-    video.currentTime = Math.max(0, Math.min(video.duration, video.currentTime + seconds))
+    if (playerRef.current) {
+      const newTime = Math.max(0, Math.min(duration, currentTime + seconds))
+      playerRef.current.seekTo(newTime, 'seconds')
+      setCurrentTime(newTime)
+    }
   }
 
   const formatTime = (time: number) => {

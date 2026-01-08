@@ -12,7 +12,7 @@ import { cursor } from "@milkdown/plugin-cursor"
 import { emoji } from "@milkdown/plugin-emoji"
 import { history } from "@milkdown/plugin-history"
 import { indent } from "@milkdown/plugin-indent"
-import { tooltip } from "@milkdown/plugin-tooltip"
+import { tooltipFactory } from "@milkdown/plugin-tooltip"
 import "@milkdown/theme-nord/style.css"
 
 interface MilkdownEditorContentProps {
@@ -49,7 +49,7 @@ function MilkdownEditorContent({ value, onChange, placeholder }: MilkdownEditorC
             .use(cursor)
             .use(emoji)
             .use(indent)
-            .use(tooltip)
+            .use(tooltipFactory())
     }, [])
 
     useEffect(() => {

@@ -1,12 +1,18 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Editor, rootCtx, defaultValueCtx } from "@milkdown/core"
+import { Editor, rootCtx, defaultValueCtx } from "@milkdown/kit/core"
 import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react"
-import { commonmark } from "@milkdown/preset-commonmark"
-import { gfm } from "@milkdown/preset-gfm"
+import { commonmark } from "@milkdown/kit/preset/commonmark"
+import { gfm } from "@milkdown/kit/preset/gfm"
 import { nord } from "@milkdown/theme-nord"
-import { listener, listenerCtx } from "@milkdown/plugin-listener"
+import { listener, listenerCtx } from "@milkdown/kit/plugin/listener"
+import { block } from "@milkdown/plugin-block"
+import { cursor } from "@milkdown/plugin-cursor"
+import { emoji } from "@milkdown/plugin-emoji"
+import { history } from "@milkdown/plugin-history"
+import { indent } from "@milkdown/plugin-indent"
+import { tooltip } from "@milkdown/plugin-tooltip"
 import "@milkdown/theme-nord/style.css"
 
 interface MilkdownEditorContentProps {
@@ -38,6 +44,12 @@ function MilkdownEditorContent({ value, onChange, placeholder }: MilkdownEditorC
             .use(commonmark)
             .use(gfm)
             .use(listener)
+            .use(history)
+            .use(block)
+            .use(cursor)
+            .use(emoji)
+            .use(indent)
+            .use(tooltip)
     }, [])
 
     useEffect(() => {

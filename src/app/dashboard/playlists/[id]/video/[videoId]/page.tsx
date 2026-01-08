@@ -1,7 +1,6 @@
 import { redirect, notFound } from "next/navigation"
 import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
-import { VideoPageLayout } from "@/components/video-page-layout"
 
 interface VideoPageProps {
   params: Promise<{
@@ -24,63 +23,20 @@ export default async function VideoPage({ params }: VideoPageProps) {
       id: videoId,
       playlistId: id,
     },
-    include: {
+    select: {
+      id: true,
       playlist: {
-        include: {
-          videos: {
-            orderBy: {
-              position: "asc",
-            },
-            include: {
-              progress: {
-                where: {
-                  userId: user.id,
-                },
-              },
-            },
-          },
-        },
-      },
-      progress: {
-        where: {
-          userId: user.id,
+        select: {
+          slug: true,
         },
       },
     },
   })
 
-  if (!video) {
+  if (!video?.playlist?.slug) {
     notFound()
   }
 
-  const userProgress = video.progress[0]
-
-  return (
-    <VideoPageLayout
-      video={{
-        id: video.id,
-        title: video.title,
-        url: video.url,
-        youtubeId: video.youtubeId,
-        duration: video.duration,
-        notes: video.notes,
-      }}
-      playlist={{
-        id: video.playlist.id,
-        title: video.playlist.title,
-        videos: video.playlist.videos.map((v) => ({
-          id: v.id,
-          title: v.title,
-          duration: v.duration,
-          position: v.position,
-          notes: v.notes,
-          updatedAt: v.updatedAt,
-          progress: v.progress,
-        })),
-      }}
-      playlistId={id}
-      userId={user.id}
-      initialProgress={userProgress?.watchedDuration || 0}
-    />
-  )
+  // Redirect to new watch route
+  redirect(`/playlist/${video.playlist.slug}/watch?video=${videoId}`)
 }

@@ -36,7 +36,7 @@ import { cn } from '@/lib/utils'
 import { EnhancedVideoPlayer } from '@/components/enhanced-video-player'
 import { extractYouTubeVideoId } from '@/lib/youtube'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { MilkdownEditor } from '@/components/milkdown-editor'
+import { TiptapEditor } from '@/components/tiptap-editor'
 import { AIChat } from '@/components/ai-chat'
 import { Logo } from '@/components/logo'
 
@@ -610,7 +610,7 @@ export function WatchPageClient({
 
                                                         {/* Notes Editor - Full Page */}
                                                         <div className="min-h-[500px]">
-                                                            <MilkdownEditor
+                                                            <TiptapEditor
                                                                 value={noteContent}
                                                                 onChange={setNoteContent}
                                                                 placeholder="Start taking notes..."
@@ -667,7 +667,7 @@ export function WatchPageClient({
                                                 {/* Notes Editor */}
                                                 <div className="flex-1 overflow-y-auto">
                                                     <div className="h-full p-4">
-                                                        <MilkdownEditor
+                                                        <TiptapEditor
                                                             value={noteContent}
                                                             onChange={setNoteContent}
                                                             placeholder="Start taking notes..."

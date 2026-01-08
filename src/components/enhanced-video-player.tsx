@@ -72,14 +72,6 @@ export function EnhancedVideoPlayer({
         <DefaultVideoLayout
           icons={defaultLayoutIcons}
           thumbnails={isYouTube ? undefined : url.replace(/\.[^/.]+$/, '-thumbnails.vtt')}
-          colorScheme="default"
-          slots={{
-            settingsMenuItems: {
-              quality: true,
-              speed: true,
-              captions: true,
-            },
-          }}
         />
       </MediaPlayer>
     </div>

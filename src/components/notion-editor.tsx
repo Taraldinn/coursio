@@ -13,6 +13,9 @@ import { Link } from "@tiptap/extension-link"
 import { Image } from "@tiptap/extension-image"
 import { Placeholder } from "@tiptap/extension-placeholder"
 import Typography from "@tiptap/extension-typography"
+import Highlight from "@tiptap/extension-highlight"
+import TextStyle from "@tiptap/extension-text-style"
+import Color from "@tiptap/extension-color"
 import { createLowlight } from "lowlight"
 import { marked } from "marked"
 import js from "highlight.js/lib/languages/javascript"
@@ -32,7 +35,10 @@ import {
     Quote,
     Code,
     Minus,
-    Table2
+    Table2,
+    Palette,
+    Highlighter,
+    Trash2
 } from "lucide-react"
 
 interface NotionEditorProps {
@@ -65,6 +71,32 @@ lowlight.register("typescript", ts)
 lowlight.register("python", python)
 lowlight.register("css", css)
 lowlight.register("html", html)
+
+const textColors = [
+    { name: "Default", value: "" },
+    { name: "Gray", value: "#9CA3AF" },
+    { name: "Brown", value: "#92400E" },
+    { name: "Red", value: "#EF4444" },
+    { name: "Orange", value: "#F97316" },
+    { name: "Yellow", value: "#EAB308" },
+    { name: "Green", value: "#22C55E" },
+    { name: "Blue", value: "#3B82F6" },
+    { name: "Purple", value: "#A855F7" },
+    { name: "Pink", value: "#EC4899" }
+]
+
+const highlightColors = [
+    { name: "Default", value: "" },
+    { name: "Gray", value: "#1F2937" },
+    { name: "Brown", value: "#4B2E0F" },
+    { name: "Red", value: "#7F1D1D" },
+    { name: "Orange", value: "#7C2D12" },
+    { name: "Yellow", value: "#78350F" },
+    { name: "Green", value: "#14532D" },
+    { name: "Blue", value: "#1E3A8A" },
+    { name: "Purple", value: "#4C1D95" },
+    { name: "Pink", value: "#831843" }
+]
 
 // Slash command items
 const slashCommands = [
@@ -170,7 +202,10 @@ export function NotionEditor({
     const [slashMenuPosition, setSlashMenuPosition] = useState({ top: 0, left: 0 })
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const [showColorMenu, setShowColorMenu] = useState(false)
+    const [colorMenuPosition, setColorMenuPosition] = useState({ top: 0, left: 0 })
     const menuRef = useRef<HTMLDivElement>(null)
+    const wrapperRef = useRef<HTMLDivElement>(null)
 
     const editor = useEditor({
         immediatelyRender: false,
@@ -181,6 +216,16 @@ export function NotionEditor({
                 heading: {
                     levels: [1, 2, 3]
                 }
+            }),
+            TextStyle,
+            Color.configure({
+                types: ["textStyle"],
+                CSSProperties: {
+                    color: null
+                }
+            }),
+            Highlight.configure({
+                multicolor: true
             }),
             CodeBlockLowlight.configure({
                 lowlight
@@ -222,6 +267,7 @@ export function NotionEditor({
         ],
         content: ensureHtml(value),
         onUpdate: ({ editor }) => {
+            if (editor.isDestroyed) return
             const text = editor.getText()
             const { from } = editor.state.selection
 
@@ -247,6 +293,24 @@ export function NotionEditor({
             }
 
             onChange(editor.getHTML())
+        },
+        onSelectionUpdate: ({ editor }) => {
+            if (editor.isDestroyed) return
+            const { from, to } = editor.state.selection
+            if (from === to) {
+                setShowColorMenu(false)
+                return
+            }
+
+            const start = editor.view.coordsAtPos(from)
+            const end = editor.view.coordsAtPos(to)
+            const wrapperRect = wrapperRef.current?.getBoundingClientRect()
+            if (!wrapperRect) return
+
+            const top = Math.min(start.top, end.top) - wrapperRect.top - 8
+            const left = (start.left + end.left) / 2 - wrapperRect.left
+            setColorMenuPosition({ top, left })
+            setShowColorMenu(true)
         },
         editorProps: {
             attributes: {
@@ -283,11 +347,40 @@ export function NotionEditor({
         }
     })
 
+    const commandMeta: Record<string, { category: string; shortcut?: string }> = {
+        "Heading 1": { category: "Headings", shortcut: "CTRL-ALT-1" },
+        "Heading 2": { category: "Headings", shortcut: "CTRL-ALT-2" },
+        "Heading 3": { category: "Headings", shortcut: "CTRL-ALT-3" },
+        Text: { category: "Basic blocks", shortcut: "CTRL-ALT-0" },
+        Paragraph: { category: "Basic blocks", shortcut: "CTRL-ALT-0" },
+        Quote: { category: "Basic blocks" },
+        "Bullet List": { category: "Basic blocks", shortcut: "CTRL-SHIFT-8" },
+        "Numbered List": { category: "Basic blocks", shortcut: "CTRL-SHIFT-7" },
+        "Task List": { category: "Basic blocks", shortcut: "CTRL-SHIFT-9" },
+        "Check List": { category: "Basic blocks", shortcut: "CTRL-SHIFT-9" },
+        "Code Block": { category: "Basic blocks", shortcut: "CTRL-ALT-C" },
+        Divider: { category: "Basic blocks" },
+        Table: { category: "Advanced" },
+        "Toggle List": { category: "Basic blocks" }
+    }
+
+    const enhancedCommands = slashCommands.map((cmd) => ({
+        ...cmd,
+        category: commandMeta[cmd.title]?.category || "Other",
+        shortcut: commandMeta[cmd.title]?.shortcut
+    }))
+
     // Filter commands based on search query
-    const filteredCommands = slashCommands.filter((cmd) =>
+    const filteredCommands = enhancedCommands.filter((cmd) =>
         cmd.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         cmd.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
+
+    const categoryOrder = ["Headings", "Basic blocks", "Advanced", "Other"]
+    const filteredCommandsWithIndex = filteredCommands.map((cmd, index) => ({ ...cmd, flatIndex: index }))
+    const groupedCommands = categoryOrder
+        .map((cat) => ({ category: cat, items: filteredCommandsWithIndex.filter((cmd) => cmd.category === cat) }))
+        .filter((group) => group.items.length > 0)
 
     const executeCommand = (index: number) => {
         if (!editor) return
@@ -325,6 +418,8 @@ export function NotionEditor({
             return
         }
 
+        if (editor.isDestroyed) return
+
         const currentContent = editor.getHTML()
         const nextContent = ensureHtml(value)
 
@@ -346,7 +441,7 @@ export function NotionEditor({
     }
 
     return (
-        <div className={`notion-editor-wrapper ${className}`} style={{ minHeight }}>
+        <div ref={wrapperRef} className={`notion-editor-wrapper ${className}`} style={{ minHeight }}>
             <style jsx global>{`
                 .notion-editor-wrapper {
                     width: 100%;
@@ -613,6 +708,118 @@ export function NotionEditor({
                     color: hsl(var(--muted-foreground));
                     margin-top: 0.125rem;
                 }
+
+                .slash-menu-header {
+                    padding: 0.25rem 0.5rem 0.5rem;
+                    border-bottom: 1px solid hsl(var(--border));
+                    margin-bottom: 0.5rem;
+                }
+
+                .slash-menu-hint {
+                    font-size: 0.75rem;
+                    color: hsl(var(--muted-foreground));
+                }
+
+                .slash-menu-group {
+                    margin-bottom: 0.75rem;
+                }
+
+                .slash-menu-group-title {
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: hsl(var(--muted-foreground));
+                    margin: 0 0.25rem 0.35rem;
+                }
+
+                .slash-menu-item-title-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 0.75rem;
+                }
+
+                .slash-menu-item-shortcut {
+                    font-size: 0.7rem;
+                    color: hsl(var(--muted-foreground));
+                    padding: 0.1rem 0.35rem;
+                    border: 1px solid hsl(var(--border));
+                    border-radius: 0.35rem;
+                }
+
+                .color-bubble {
+                    position: absolute;
+                    transform: translate(-50%, -100%);
+                    background: hsl(var(--popover));
+                    border: 1px solid hsl(var(--border));
+                    border-radius: 0.75rem;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+                    padding: 0.75rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    z-index: 1100;
+                    min-width: 240px;
+                }
+
+                .color-bubble-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .color-bubble-label {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.35rem;
+                    font-size: 0.8rem;
+                    color: hsl(var(--muted-foreground));
+                    width: 90px;
+                    flex-shrink: 0;
+                }
+
+                .color-bubble-swatches {
+                    display: grid;
+                    grid-template-columns: repeat(5, 1fr);
+                    gap: 0.35rem;
+                    flex: 1;
+                }
+
+                .color-swatch {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 0.45rem;
+                    border: 1px solid hsl(var(--border));
+                    cursor: pointer;
+                    transition: transform 0.08s ease, box-shadow 0.08s ease;
+                }
+
+                .color-swatch.is-default {
+                    background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--muted)));
+                }
+
+                .color-swatch:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+                }
+
+                .color-bubble-clear {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.35rem;
+                    align-self: flex-end;
+                    font-size: 0.8rem;
+                    color: hsl(var(--muted-foreground));
+                    background: transparent;
+                    border: 1px solid hsl(var(--border));
+                    border-radius: 0.5rem;
+                    padding: 0.35rem 0.6rem;
+                    cursor: pointer;
+                }
+
+                .color-bubble-clear:hover {
+                    color: hsl(var(--destructive));
+                    border-color: hsl(var(--destructive));
+                }
             `}</style>
 
             <EditorContent editor={editor} />
@@ -627,22 +834,100 @@ export function NotionEditor({
                         left: slashMenuPosition.left
                     }}
                 >
-                    {filteredCommands.map((command, index) => (
-                        <div
-                            key={command.title}
-                            className={`slash-menu-item ${index === selectedIndex ? 'selected' : ''}`}
-                            onClick={() => executeCommand(index)}
-                            onMouseEnter={() => setSelectedIndex(index)}
-                        >
-                            <div className="slash-menu-item-icon">
-                                <command.icon size={18} />
-                            </div>
-                            <div className="slash-menu-item-content">
-                                <div className="slash-menu-item-title">{command.title}</div>
-                                <div className="slash-menu-item-description">{command.description}</div>
-                            </div>
+                    <div className="slash-menu-header">
+                        <span className="slash-menu-hint">Enter text or type "/" for commands</span>
+                    </div>
+                    {groupedCommands.map((group) => (
+                        <div key={group.category} className="slash-menu-group">
+                            <div className="slash-menu-group-title">{group.category}</div>
+                            {group.items.map((command) => (
+                                <div
+                                    key={`${group.category}-${command.title}`}
+                                    className={`slash-menu-item ${command.flatIndex === selectedIndex ? 'selected' : ''}`}
+                                    onClick={() => executeCommand(command.flatIndex)}
+                                    onMouseEnter={() => setSelectedIndex(command.flatIndex)}
+                                >
+                                    <div className="slash-menu-item-icon">
+                                        <command.icon size={18} />
+                                    </div>
+                                    <div className="slash-menu-item-content">
+                                        <div className="slash-menu-item-title-row">
+                                            <span className="slash-menu-item-title">{command.title}</span>
+                                            {command.shortcut && (
+                                                <span className="slash-menu-item-shortcut">{command.shortcut}</span>
+                                            )}
+                                        </div>
+                                        <div className="slash-menu-item-description">{command.description}</div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Inline color menu */}
+            {showColorMenu && (
+                <div
+                    className="color-bubble"
+                    style={{ top: colorMenuPosition.top, left: colorMenuPosition.left }}
+                    onMouseDown={(e) => e.preventDefault()}
+                >
+                    <div className="color-bubble-row">
+                        <div className="color-bubble-label">
+                            <Palette size={14} />
+                            <span>Text</span>
+                        </div>
+                        <div className="color-bubble-swatches">
+                            {textColors.map((color) => (
+                                <button
+                                    key={color.name}
+                                    className={`color-swatch ${color.value === '' ? 'is-default' : ''}`}
+                                    style={{ backgroundColor: color.value || "transparent" }}
+                                    title={color.name}
+                                    onClick={() => {
+                                        if (!editor) return
+                                        const chain = editor.chain().focus()
+                                        color.value ? chain.setColor(color.value).run() : chain.unsetColor().run()
+                                        setShowColorMenu(false)
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <div className="color-bubble-row">
+                        <div className="color-bubble-label">
+                            <Highlighter size={14} />
+                            <span>Background</span>
+                        </div>
+                        <div className="color-bubble-swatches">
+                            {highlightColors.map((color) => (
+                                <button
+                                    key={color.name}
+                                    className={`color-swatch ${color.value === '' ? 'is-default' : ''}`}
+                                    style={{ backgroundColor: color.value || "transparent" }}
+                                    title={color.name}
+                                    onClick={() => {
+                                        if (!editor) return
+                                        const chain = editor.chain().focus()
+                                        color.value ? chain.setHighlight({ color: color.value }).run() : chain.unsetHighlight().run()
+                                        setShowColorMenu(false)
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <button
+                        className="color-bubble-clear"
+                        onClick={() => {
+                            if (!editor) return
+                            editor.chain().focus().unsetColor().unsetHighlight().run()
+                            setShowColorMenu(false)
+                        }}
+                    >
+                        <Trash2 size={14} />
+                        Clear colors
+                    </button>
                 </div>
             )}
         </div>

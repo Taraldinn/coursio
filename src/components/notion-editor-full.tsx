@@ -236,6 +236,7 @@ export function NotionEditor({
         ],
         content: ensureHtml(value),
         onUpdate: ({ editor }) => {
+            if (editor.isDestroyed) return
             const text = editor.getText()
             const { from } = editor.state.selection
 
@@ -359,6 +360,8 @@ export function NotionEditor({
 
             return
         }
+
+        if (editor.isDestroyed) return
 
         const currentContent = editor.getHTML()
         const nextContent = ensureHtml(value)

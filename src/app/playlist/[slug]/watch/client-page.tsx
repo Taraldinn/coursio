@@ -58,6 +58,7 @@ export function WatchPageClient({
 }: WatchPageClientProps) {
     const router = useRouter()
     const { theme, setTheme } = useTheme()
+    const [mounted, setMounted] = useState(false)
     const [activePanel, setActivePanel] = useState<LeftPanel>("contents")
     const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true)
     const [isNotesOpen, setIsNotesOpen] = useState(true)
@@ -76,6 +77,10 @@ export function WatchPageClient({
     const completedCount = playlist.videos.filter((v: any) => v.progress?.[0]?.completed).length
     const totalCount = playlist.videos.length
     const completionPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const formatDuration = (seconds: number) => {
         const h = Math.floor(seconds / 3600)
@@ -458,17 +463,24 @@ export function WatchPageClient({
                                         </Tooltip>
 
                                         <Tooltip>
-                                            <TooltipTrigger asChild>
+                                            <TooltipTrigger asChild suppressHydrationWarning>
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
                                                     className="h-9 w-9"
                                                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                                    suppressHydrationWarning
                                                 >
-                                                    {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                                                    {mounted ? (
+                                                        theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />
+                                                    ) : (
+                                                        <Sun className="h-4 w-4" />
+                                                    )}
                                                 </Button>
                                             </TooltipTrigger>
-                                            <TooltipContent>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</TooltipContent>
+                                            <TooltipContent suppressHydrationWarning>
+                                                {mounted ? (theme === 'dark' ? 'Light mode' : 'Dark mode') : 'Toggle theme'}
+                                            </TooltipContent>
                                         </Tooltip>
                                     </div>
                                 </div>
@@ -611,6 +623,7 @@ export function WatchPageClient({
                                                         {/* Notes Editor - Full Page */}
                                                         <div className="min-h-[500px]">
                                                             <TiptapEditor
+                                                                key={selectedNoteVideo?.id || currentVideo.id}
                                                                 value={noteContent}
                                                                 onChange={setNoteContent}
                                                                 placeholder="Start taking notes..."
@@ -668,6 +681,7 @@ export function WatchPageClient({
                                                 <div className="flex-1 overflow-y-auto">
                                                     <div className="h-full p-4">
                                                         <TiptapEditor
+                                                            key={currentVideo.id}
                                                             value={noteContent}
                                                             onChange={setNoteContent}
                                                             placeholder="Start taking notes..."

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react"
+import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
 import { TaskList } from "@tiptap/extension-task-list"
@@ -16,7 +16,7 @@ import Typography from "@tiptap/extension-typography"
 import Highlight from "@tiptap/extension-highlight"
 import TextAlign from "@tiptap/extension-text-align"
 import Underline from "@tiptap/extension-underline"
-import TextStyle from "@tiptap/extension-text-style"
+import { TextStyle } from "@tiptap/extension-text-style"
 import Color from "@tiptap/extension-color"
 import { createLowlight } from "lowlight"
 import js from "highlight.js/lib/languages/javascript"
@@ -36,18 +36,7 @@ import {
     Quote,
     Code,
     Minus,
-    Table2,
-    Bold,
-    Italic,
-    Underline as UnderlineIcon,
-    Strikethrough,
-    Link2,
-    Highlighter,
-    AlignLeft,
-    AlignCenter,
-    AlignRight,
-    Palette,
-    GripVertical
+    Table2
 } from "lucide-react"
 
 interface NotionEditorProps {
@@ -158,32 +147,6 @@ const slashCommands = [
     }
 ]
 
-// Text colors for the color picker
-const textColors = [
-    { name: "Default", value: "" },
-    { name: "Gray", value: "#9CA3AF" },
-    { name: "Red", value: "#EF4444" },
-    { name: "Orange", value: "#F97316" },
-    { name: "Yellow", value: "#EAB308" },
-    { name: "Green", value: "#22C55E" },
-    { name: "Blue", value: "#3B82F6" },
-    { name: "Purple", value: "#A855F7" },
-    { name: "Pink", value: "#EC4899" }
-]
-
-// Highlight colors
-const highlightColors = [
-    { name: "None", value: "" },
-    { name: "Gray", value: "#F3F4F6" },
-    { name: "Red", value: "#FEE2E2" },
-    { name: "Orange", value: "#FFEDD5" },
-    { name: "Yellow", value: "#FEF9C3" },
-    { name: "Green", value: "#D1FAE5" },
-    { name: "Blue", value: "#DBEAFE" },
-    { name: "Purple", value: "#F3E8FF" },
-    { name: "Pink", value: "#FCE7F3" }
-]
-
 export function NotionEditor({
     value,
     onChange,
@@ -196,8 +159,6 @@ export function NotionEditor({
     const [slashMenuPosition, setSlashMenuPosition] = useState({ top: 0, left: 0 })
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedIndex, setSelectedIndex] = useState(0)
-    const [showColorPicker, setShowColorPicker] = useState(false)
-    const [showHighlightPicker, setShowHighlightPicker] = useState(false)
     const menuRef = useRef<HTMLDivElement>(null)
 
     const editor = useEditor({
@@ -295,23 +256,27 @@ export function NotionEditor({
                 if (event.key === "ArrowDown") {
                     event.preventDefault()
                     setSelectedIndex((prev) => Math.min(prev + 1, filteredCommands.length - 1))
+
                     return true
                 }
 
                 if (event.key === "ArrowUp") {
                     event.preventDefault()
                     setSelectedIndex((prev) => Math.max(prev - 1, 0))
+
                     return true
                 }
 
                 if (event.key === "Enter" || event.key === "Tab") {
                     event.preventDefault()
                     executeCommand(selectedIndex)
+
                     return true
                 }
 
                 if (event.key === "Escape") {
                     setShowSlashMenu(false)
+
                     return true
                 }
 
@@ -353,6 +318,7 @@ export function NotionEditor({
 
     const setLink = () => {
         if (!editor) return
+
         const previousUrl = editor.getAttributes('link').href
         const url = window.prompt('URL', previousUrl)
 
@@ -360,30 +326,11 @@ export function NotionEditor({
 
         if (url === '') {
             editor.chain().focus().extendMarkRange('link').unsetLink().run()
+
             return
         }
 
         editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-    }
-
-    const setColor = (color: string) => {
-        if (!editor) return
-        if (color) {
-            editor.chain().focus().setColor(color).run()
-        } else {
-            editor.chain().focus().unsetColor().run()
-        }
-        setShowColorPicker(false)
-    }
-
-    const setHighlight = (color: string) => {
-        if (!editor) return
-        if (color) {
-            editor.chain().focus().setHighlight({ color }).run()
-        } else {
-            editor.chain().focus().unsetHighlight().run()
-        }
-        setShowHighlightPicker(false)
     }
 
     // Update content when value changes from outside
@@ -789,144 +736,8 @@ export function NotionEditor({
 
             <EditorContent editor={editor} />
 
-            {/* Bubble Menu - appears on text selection */}
-            {editor && (
-                <BubbleMenu
-                    editor={editor}
-                    tippyOptions={{ duration: 100, placement: "top" }}
-                    className="bubble-menu-wrapper"
-                >
-                    <button
-                        onClick={() => editor.chain().focus().toggleBold().run()}
-                        className={`bubble-menu-button ${editor.isActive("bold") ? "is-active" : ""}`}
-                        title="Bold (Cmd+B)"
-                    >
-                        <Bold size={16} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleItalic().run()}
-                        className={`bubble-menu-button ${editor.isActive("italic") ? "is-active" : ""}`}
-                        title="Italic (Cmd+I)"
-                    >
-                        <Italic size={16} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleUnderline().run()}
-                        className={`bubble-menu-button ${editor.isActive("underline") ? "is-active" : ""}`}
-                        title="Underline (Cmd+U)"
-                    >
-                        <UnderlineIcon size={16} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleStrike().run()}
-                        className={`bubble-menu-button ${editor.isActive("strike") ? "is-active" : ""}`}
-                        title="Strikethrough"
-                    >
-                        <Strikethrough size={16} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleCode().run()}
-                        className={`bubble-menu-button ${editor.isActive("code") ? "is-active" : ""}`}
-                        title="Code"
-                    >
-                        <Code size={16} />
-                    </button>
-
-                    <div className="bubble-menu-divider" />
-
-                    <button
-                        onClick={setLink}
-                        className={`bubble-menu-button ${editor.isActive("link") ? "is-active" : ""}`}
-                        title="Add Link"
-                    >
-                        <Link2 size={16} />
-                    </button>
-
-                    <div className="bubble-menu-divider" />
-
-                    <div style={{ position: "relative" }}>
-                        <button
-                            onClick={() => {
-                                setShowColorPicker(!showColorPicker)
-                                setShowHighlightPicker(false)
-                            }}
-                            className="bubble-menu-button"
-                            title="Text Color"
-                        >
-                            <Palette size={16} />
-                        </button>
-                        {showColorPicker && (
-                            <div className="color-picker-dropdown">
-                                {textColors.map((color) => (
-                                    <button
-                                        key={color.name}
-                                        className="color-swatch"
-                                        style={{
-                                            backgroundColor: color.value || "transparent",
-                                            border: !color.value ? "2px dashed hsl(var(--border))" : undefined
-                                        }}
-                                        onClick={() => setColor(color.value)}
-                                        title={color.name}
-                                    />
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <div style={{ position: "relative" }}>
-                        <button
-                            onClick={() => {
-                                setShowHighlightPicker(!showHighlightPicker)
-                                setShowColorPicker(false)
-                            }}
-                            className={`bubble-menu-button ${editor.isActive("highlight") ? "is-active" : ""}`}
-                            title="Highlight"
-                        >
-                            <Highlighter size={16} />
-                        </button>
-                        {showHighlightPicker && (
-                            <div className="color-picker-dropdown">
-                                {highlightColors.map((color) => (
-                                    <button
-                                        key={color.name}
-                                        className="color-swatch"
-                                        style={{
-                                            backgroundColor: color.value || "transparent",
-                                            border: !color.value ? "2px dashed hsl(var(--border))" : undefined
-                                        }}
-                                        onClick={() => setHighlight(color.value)}
-                                        title={color.name}
-                                    />
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="bubble-menu-divider" />
-
-                    <button
-                        onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                        className={`bubble-menu-button ${editor.isActive({ textAlign: 'left' }) ? "is-active" : ""}`}
-                        title="Align Left"
-                    >
-                        <AlignLeft size={16} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                        className={`bubble-menu-button ${editor.isActive({ textAlign: 'center' }) ? "is-active" : ""}`}
-                        title="Align Center"
-                    >
-                        <AlignCenter size={16} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                        className={`bubble-menu-button ${editor.isActive({ textAlign: 'right' }) ? "is-active" : ""}`}
-                        title="Align Right"
-                    >
-                        <AlignRight size={16} />
-                    </button>
-                </BubbleMenu>
-            )}
+            {/* Bubble Menu - temporarily disabled due to API compatibility */}
+            {/* Will be re-enabled using @tiptap/extension-bubble-menu or custom implementation */}
 
             {/* Slash Command Menu */}
             {showSlashMenu && filteredCommands.length > 0 && (

@@ -3,11 +3,11 @@ import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { ClerkProvider } from '@clerk/nextjs';
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { Raleway } from "next/font/google";
 
-const raleway = Raleway({subsets:['latin'],variable:'--font-sans'});
+const raleway = Raleway({ subsets: ['latin'], variable: '--font-sans' });
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -45,7 +45,12 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
                 </head>
                 <body
                     className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground overscroll-none antialiased`}>
-                    <ThemeProvider attribute='class'>
+                    <ThemeProvider
+                        attribute='class'
+                        defaultTheme='system'
+                        enableSystem
+                        disableTransitionOnChange
+                    >
                         {children}
                         <Toaster />
                     </ThemeProvider>

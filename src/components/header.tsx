@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useUser, useClerk } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
@@ -35,6 +36,11 @@ export function Header() {
   const { signOut } = useClerk()
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const navItems = [
     { name: "Explore", href: "/dashboard/explore", icon: Globe },
@@ -118,9 +124,9 @@ export function Header() {
 
           {/* User Menu */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild suppressHydrationWarning>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
-                <Avatar className="h-9 w-9">
+                <Avatar className="h-9 w-9" suppressHydrationWarning>
                   <AvatarImage src={user?.imageUrl} alt={user?.firstName || ""} />
                   <AvatarFallback className="text-xs bg-primary/10">
                     {user?.firstName?.charAt(0) || user?.username?.charAt(0) || "U"}
@@ -158,13 +164,23 @@ export function Header() {
                   Help & Support
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={toggleTheme} className="cursor-pointer p-2">
-                {theme === 'dark' ? (
-                  <Sun className="mr-3 h-4 w-4" />
-                ) : (
-                  <Moon className="mr-3 h-4 w-4" />
+              <DropdownMenuItem onClick={toggleTheme} className="cursor-pointer p-2" suppressHydrationWarning>
+                {mounted && (
+                  <>
+                    {theme === 'dark' ? (
+                      <Sun className="mr-3 h-4 w-4" />
+                    ) : (
+                      <Moon className="mr-3 h-4 w-4" />
+                    )}
+                    {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  </>
                 )}
-                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                {!mounted && (
+                  <>
+                    <Moon className="mr-3 h-4 w-4" />
+                    Toggle Theme
+                  </>
+                )}
               </DropdownMenuItem>
               <DropdownMenuSeparator className="my-2" />
               <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer p-2 text-red-500 focus:text-red-500">

@@ -19,6 +19,7 @@ import Underline from "@tiptap/extension-underline"
 import { TextStyle } from "@tiptap/extension-text-style"
 import Color from "@tiptap/extension-color"
 import { createLowlight } from "lowlight"
+import { marked } from "marked"
 import js from "highlight.js/lib/languages/javascript"
 import ts from "highlight.js/lib/languages/typescript"
 import python from "highlight.js/lib/languages/python"
@@ -45,6 +46,21 @@ interface NotionEditorProps {
     placeholder?: string
     className?: string
     minHeight?: string
+}
+
+// Convert legacy markdown notes to HTML so the editor renders them richly.
+const ensureHtml = (content: string) => {
+    if (!content) return ""
+
+    const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(content.trim())
+    if (looksLikeHtml) return content
+
+    try {
+        return marked.parse(content, { gfm: true, breaks: true }) as string
+    } catch (error) {
+        console.error("Markdown to HTML conversion failed", error)
+        return content
+    }
 }
 
 // Create lowlight instance once outside component
@@ -218,7 +234,7 @@ export function NotionEditor({
             TextStyle,
             Color
         ],
-        content: value,
+        content: ensureHtml(value),
         onUpdate: ({ editor }) => {
             const text = editor.getText()
             const { from } = editor.state.selection
@@ -345,10 +361,11 @@ export function NotionEditor({
         }
 
         const currentContent = editor.getHTML()
+        const nextContent = ensureHtml(value)
 
         // Only update if content is different
-        if (currentContent !== value) {
-            editor.commands.setContent(value)
+        if (currentContent !== nextContent) {
+            editor.commands.setContent(nextContent)
         }
     }, [value, editor])
 

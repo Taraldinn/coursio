@@ -89,6 +89,7 @@
     "highlight.js": "^11.11.1",
     "input-otp": "^1.4.2",
     "lowlight": "^3.3.0",
+    "marked": "^15.0.4",
     "lucide-react": "^0.539.0",
     "media-icons": "^1.1.5",
     "next": "16.1.1",

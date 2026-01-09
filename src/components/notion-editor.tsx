@@ -219,10 +219,7 @@ export function NotionEditor({
             }),
             TextStyle,
             Color.configure({
-                types: ["textStyle"],
-                CSSProperties: {
-                    color: null
-                }
+                types: ["textStyle"]
             }),
             Highlight.configure({
                 multicolor: true

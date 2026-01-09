@@ -11,6 +11,7 @@ import {
   ChevronRight,
   BookOpen,
   BarChart3,
+  PenSquare,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +26,7 @@ import { Logo } from "@/components/logo"
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Playlists", href: "/dashboard/playlists", icon: PlaySquare },
+  { name: "Blog", href: "/dashboard/blog", icon: PenSquare },
   { name: "Statistics", href: "/dashboard/statistics", icon: BarChart3 },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ]
@@ -46,7 +48,7 @@ export function Sidebar() {
           <Link href="/dashboard">
             <Logo size="sm" showText={!collapsed} />
           </Link>
-          
+
           {/* Collapse Toggle Button */}
           <Button
             variant="ghost"

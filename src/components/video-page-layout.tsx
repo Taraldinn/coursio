@@ -4,6 +4,7 @@ import { useState } from "react"
 import { VideoPlayer } from "@/components/video-player"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { DiscussionSidebar } from "@/components/discussion-sidebar"
 import { cn } from "@/lib/utils"
 import {
     Menu,
@@ -14,7 +15,6 @@ import {
     Folder,
     ArrowLeft,
     PanelLeftClose,
-    PanelRightClose,
     Save,
     Share2,
     Download,
@@ -23,12 +23,22 @@ import {
     PlayCircle,
     CheckCircle2,
     Circle,
-    X
+    X,
+    ThumbsUp,
+    Bookmark,
+    Copy,
+    ExternalLink
 } from "lucide-react"
 import Link from "next/link"
 import { formatDuration } from "@/lib/playlist-utils"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface Video {
     id: string
@@ -74,8 +84,11 @@ export function VideoPageLayout({
     const [leftPanel, setLeftPanel] = useState<LeftPanel>("content")
     const [isLeftCollapsed, setIsLeftCollapsed] = useState(false)
     const [isRightOpen, setIsRightOpen] = useState(false)
+    const [isDiscussionOpen, setIsDiscussionOpen] = useState(false)
     const [noteContent, setNoteContent] = useState(video.notes || "")
     const [isSaving, setIsSaving] = useState(false)
+    const [isHelpful, setIsHelpful] = useState(false)
+    const [isSaved, setIsSaved] = useState(false)
 
     const currentIndex = playlist.videos.findIndex(v => v.id === video.id)
     const prevVideo = currentIndex > 0 ? playlist.videos[currentIndex - 1] : null
@@ -96,6 +109,31 @@ export function VideoPageLayout({
         } finally {
             setIsSaving(false)
         }
+    }
+
+    const handleHelpful = () => {
+        setIsHelpful(!isHelpful)
+        toast.success(isHelpful ? "Removed from helpful" : "Marked as helpful!")
+    }
+
+    const handleSaveVideo = () => {
+        setIsSaved(!isSaved)
+        toast.success(isSaved ? "Removed from saved" : "Video saved!")
+    }
+
+    const handleShare = async () => {
+        const url = window.location.href
+        try {
+            await navigator.clipboard.writeText(url)
+            toast.success("Link copied to clipboard!")
+        } catch {
+            toast.error("Failed to copy link")
+        }
+    }
+
+    const handleOpenDiscussion = () => {
+        setIsDiscussionOpen(true)
+        setIsRightOpen(false)
     }
 
     const toggleLeftPanel = (panel: LeftPanel) => {
@@ -421,13 +459,64 @@ export function VideoPageLayout({
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex gap-2">
-                            <Button variant="outline" size="sm" className="bg-transparent border-white/10 text-white/70 hover:bg-white/10 hover:text-white">
-                                👍 Helpful
-                            </Button>
-                            <Button variant="outline" size="sm" className="bg-transparent border-white/10 text-white/70 hover:bg-white/10 hover:text-white">
-                                💬 Discuss
-                            </Button>
+                        <div className="flex items-center justify-between">
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className={cn(
+                                        "bg-transparent border-white/10 text-white/70 hover:bg-white/10 hover:text-white gap-2",
+                                        isHelpful && "bg-green-500/20 border-green-500/30 text-green-400 hover:bg-green-500/30 hover:text-green-300"
+                                    )}
+                                    onClick={handleHelpful}
+                                >
+                                    <ThumbsUp className={cn("h-4 w-4", isHelpful && "fill-current")} />
+                                    Helpful
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="bg-transparent border-white/10 text-white/70 hover:bg-white/10 hover:text-white gap-2"
+                                    onClick={handleOpenDiscussion}
+                                >
+                                    <MessageSquare className="h-4 w-4" />
+                                    Discussion
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className={cn(
+                                        "bg-transparent border-white/10 text-white/70 hover:bg-white/10 hover:text-white gap-2",
+                                        isSaved && "bg-yellow-500/20 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/30 hover:text-yellow-300"
+                                    )}
+                                    onClick={handleSaveVideo}
+                                >
+                                    <Bookmark className={cn("h-4 w-4", isSaved && "fill-current")} />
+                                    Save
+                                </Button>
+                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="bg-transparent border-white/10 text-white/70 hover:bg-white/10 hover:text-white gap-2"
+                                    >
+                                        <Share2 className="h-4 w-4" />
+                                        Share
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                    <DropdownMenuItem onClick={handleShare}>
+                                        <Copy className="h-4 w-4 mr-2" />
+                                        Copy link
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => window.open(window.location.href, "_blank")}>
+                                        <ExternalLink className="h-4 w-4 mr-2" />
+                                        Open in new tab
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
 
                         {/* Prev/Next Navigation */}
@@ -508,6 +597,13 @@ export function VideoPageLayout({
                     )}
                 </div>
             </div>
+
+            {/* Discussion Sidebar */}
+            <DiscussionSidebar
+                videoId={video.id}
+                isOpen={isDiscussionOpen}
+                onClose={() => setIsDiscussionOpen(false)}
+            />
         </div>
     )
 }

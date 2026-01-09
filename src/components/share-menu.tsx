@@ -53,7 +53,7 @@ export function ShareMenu({ open, onOpenChange, playlistSlug, playlistTitle }: S
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Share Playlist</DialogTitle>
           <DialogDescription>
@@ -167,10 +167,16 @@ export function ShareMenu({ open, onOpenChange, playlistSlug, playlistTitle }: S
 
             <div className="space-y-2">
               <Label>Preview</Label>
-              <div className="border rounded-lg p-4 bg-muted">
-                <div className="aspect-video bg-background rounded flex items-center justify-center text-muted-foreground">
-                  Embed Preview
-                </div>
+              <div className="relative border rounded-lg bg-muted" style={{ height: '280px', overflow: 'hidden' }}>
+                <iframe
+                  src={`/embed/${playlistSlug}`}
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  className="bg-background absolute inset-0"
+                  title="Embed Preview"
+                  style={{ border: 'none' }}
+                />
               </div>
             </div>
           </TabsContent>
